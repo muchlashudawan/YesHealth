@@ -1,0 +1,4 @@
+#Mon Dec 25 00:08:51 WIB 2023
+base.0=D\:\\GithubDesktop\\New folder (3)\\flutter_test_muchlas\\build\\app\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

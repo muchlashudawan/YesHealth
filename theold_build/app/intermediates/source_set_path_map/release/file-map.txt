@@ -1,0 +1,14 @@
+com.muchlas.yeshealth.app-jetified-window-java-1.0.0-beta04-0 C:\Users\MasDepan\.gradle\caches\transforms-3\0deec26fb05f7d94bf8bf494b5e3f2c4\transformed\jetified-window-java-1.0.0-beta04\res
+com.muchlas.yeshealth.app-jetified-window-1.0.0-beta04-1 C:\Users\MasDepan\.gradle\caches\transforms-3\3a06fa4d709f37263b7c7e85c789335e\transformed\jetified-window-1.0.0-beta04\res
+com.muchlas.yeshealth.app-core-1.6.0-2 C:\Users\MasDepan\.gradle\caches\transforms-3\8aa380b725d1804d361ef430e9acbf20\transformed\core-1.6.0\res
+com.muchlas.yeshealth.app-jetified-annotation-experimental-1.1.0-3 C:\Users\MasDepan\.gradle\caches\transforms-3\8c8f75d118ce4fd750517df5ecde6a4f\transformed\jetified-annotation-experimental-1.1.0\res
+com.muchlas.yeshealth.app-main-4 D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\res
+com.muchlas.yeshealth.app-release-5 D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\release\res
+com.muchlas.yeshealth.app-pngs-6 D:\GithubDesktop\New folder (3)\flutter_test_muchlas\build\app\generated\res\pngs\release
+com.muchlas.yeshealth.app-resValues-7 D:\GithubDesktop\New folder (3)\flutter_test_muchlas\build\app\generated\res\resValues\release
+com.muchlas.yeshealth.app-rs-8 D:\GithubDesktop\New folder (3)\flutter_test_muchlas\build\app\generated\res\rs\release
+com.muchlas.yeshealth.app-mergeReleaseResources-9 D:\GithubDesktop\New folder (3)\flutter_test_muchlas\build\app\intermediates\incremental\release\mergeReleaseResources\merged.dir
+com.muchlas.yeshealth.app-mergeReleaseResources-10 D:\GithubDesktop\New folder (3)\flutter_test_muchlas\build\app\intermediates\incremental\release\mergeReleaseResources\stripped.dir
+com.muchlas.yeshealth.app-merged_res-11 D:\GithubDesktop\New folder (3)\flutter_test_muchlas\build\app\intermediates\merged_res\release
+com.muchlas.yeshealth.app-packaged_res-12 D:\GithubDesktop\New folder (3)\flutter_test_muchlas\build\path_provider_android\intermediates\packaged_res\release
+com.muchlas.yeshealth.app-packaged_res-13 D:\GithubDesktop\New folder (3)\flutter_test_muchlas\build\sqflite\intermediates\packaged_res\release

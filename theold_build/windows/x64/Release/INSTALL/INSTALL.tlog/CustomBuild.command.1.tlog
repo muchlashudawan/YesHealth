@@ -1,0 +1,10 @@
+^D:\GITHUBDESKTOP\NEW FOLDER (3)\FLUTTER_TEST_MUCHLAS\BUILD\WINDOWS\CMAKEFILES\9655D5C6BF22DF48E885780DC7CBFA6C\INSTALL_FORCE.RULE
+setlocal
+cd .
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

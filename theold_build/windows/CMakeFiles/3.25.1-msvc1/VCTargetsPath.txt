@@ -1,0 +1,1 @@
+D:/Program Files/VSCodeCommunity/MSBuild/Microsoft/VC/v170

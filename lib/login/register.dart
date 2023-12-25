@@ -2,6 +2,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import './redirect_register.dart';
 import '../database_helper.dart';
 import '../user_model.dart';
@@ -23,6 +24,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _umurController = TextEditingController();
   final TextEditingController _tanggalLahirController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
+  final TextEditingController _noTelpController = TextEditingController();
 
   DateTime? _selectedDate;
   String? _usernameError;
@@ -33,6 +35,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String? _umurError;
   String? _tanggalLahirError;
   String? _genderError;
+  String? _noTelpError;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -60,6 +63,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     String umur = _umurController.text.trim();
     String tanggalLahir = _tanggalLahirController.text.trim();
     String gender = _genderController.text.trim();
+    String nomorTelpon = _noTelpController.text.trim();
 
     print("Username: " + username);
     print("Password: " + password);
@@ -255,6 +259,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
       umur: int.parse(umur),
       alamat: alamat,
       tanggalLahir: tanggalLahir,
+      nomorTelpon: nomorTelpon,
+      type: "customer",
       jenisKelamin: gender,
     );
 
@@ -376,6 +382,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
                 maxLength: 128, // Set the maximum length to 3 characters
                 maxLengthEnforcement: MaxLengthEnforcement.enforced,
+              ),
+              IntlPhoneField(
+                controller: _noTelpController,
+                decoration: InputDecoration(
+                  labelText: 'Nomor Telpon',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (phone) {
+                  print(phone.completeNumber); // Get the complete phone number
+                },
               ),
               TextField(
                 controller: _tanggalLahirController,

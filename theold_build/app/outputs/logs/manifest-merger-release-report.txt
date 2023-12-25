@@ -1,0 +1,161 @@
+-- Merging decision tree log ---
+application
+INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:2:5-32:19
+MERGED from [androidx.window:window:1.0.0-beta04] C:\Users\MasDepan\.gradle\caches\transforms-3\3a06fa4d709f37263b7c7e85c789335e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:24:5-31:19
+MERGED from [androidx.window:window:1.0.0-beta04] C:\Users\MasDepan\.gradle\caches\transforms-3\3a06fa4d709f37263b7c7e85c789335e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:24:5-31:19
+MERGED from [androidx.core:core:1.6.0] C:\Users\MasDepan\.gradle\caches\transforms-3\8aa380b725d1804d361ef430e9acbf20\transformed\core-1.6.0\AndroidManifest.xml:24:5-89
+MERGED from [androidx.core:core:1.6.0] C:\Users\MasDepan\.gradle\caches\transforms-3\8aa380b725d1804d361ef430e9acbf20\transformed\core-1.6.0\AndroidManifest.xml:24:5-89
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\MasDepan\.gradle\caches\transforms-3\99d056d3f42c91ccdde5b1c9ff8aeb74\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\MasDepan\.gradle\caches\transforms-3\99d056d3f42c91ccdde5b1c9ff8aeb74\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:24:5-25:19
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.6.0] C:\Users\MasDepan\.gradle\caches\transforms-3\8aa380b725d1804d361ef430e9acbf20\transformed\core-1.6.0\AndroidManifest.xml:24:18-86
+	android:label
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:3:9-52
+	android:icon
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:5:9-43
+	android:name
+		INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:4:9-42
+manifest
+ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:1:1-33:12
+INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:1:1-33:12
+INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:1:1-33:12
+INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:1:1-33:12
+MERGED from [:sqflite] D:\GithubDesktop\New folder (3)\flutter_test_muchlas\build\sqflite\intermediates\merged_manifest\release\AndroidManifest.xml:2:1-9:12
+MERGED from [:path_provider_android] D:\GithubDesktop\New folder (3)\flutter_test_muchlas\build\path_provider_android\intermediates\merged_manifest\release\AndroidManifest.xml:2:1-9:12
+MERGED from [androidx.window:window-java:1.0.0-beta04] C:\Users\MasDepan\.gradle\caches\transforms-3\0deec26fb05f7d94bf8bf494b5e3f2c4\transformed\jetified-window-java-1.0.0-beta04\AndroidManifest.xml:17:1-23:12
+MERGED from [androidx.window:window:1.0.0-beta04] C:\Users\MasDepan\.gradle\caches\transforms-3\3a06fa4d709f37263b7c7e85c789335e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:17:1-33:12
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\MasDepan\.gradle\caches\transforms-3\5b140b2fbc5ba3534a23c34630a2f4d7\transformed\fragment-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\1f7b89c36c0cdb8344cc6dc2cf9a8b8b\transformed\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\d9ebad2b8476dadc22169716b8022481\transformed\loader-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\1166282b2f9c18a85ee9a3d180577a4d\transformed\jetified-activity-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\8ac02fb2d3b6f96778ce29ccd7d03b81\transformed\customview-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core:1.6.0] C:\Users\MasDepan\.gradle\caches\transforms-3\8aa380b725d1804d361ef430e9acbf20\transformed\core-1.6.0\AndroidManifest.xml:17:1-26:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.2.0] C:\Users\MasDepan\.gradle\caches\transforms-3\d42cf1552b8aea3333aa06c9d81d5b5f\transformed\lifecycle-runtime-2.2.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\068d140211987e5e1635c98743b847b6\transformed\jetified-savedstate-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\89de5576bdf53869a9fec7d9943957be\transformed\lifecycle-livedata-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\30b45b30faa6f96c56c53bc901062cbf\transformed\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.tracing:tracing:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\91f78dc8135531cb476cfddec3f1974b\transformed\jetified-tracing-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\1fc0652e740e00d03170ddf41e52b0cb\transformed\core-runtime-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\MasDepan\.gradle\caches\transforms-3\99d056d3f42c91ccdde5b1c9ff8aeb74\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\MasDepan\.gradle\caches\transforms-3\cf233e2686141d61429e936d501ee391\transformed\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.annotation:annotation-experimental:1.1.0] C:\Users\MasDepan\.gradle\caches\transforms-3\8c8f75d118ce4fd750517df5ecde6a4f\transformed\jetified-annotation-experimental-1.1.0\AndroidManifest.xml:17:1-24:12
+INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:1:1-33:12
+INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:1:1-33:12
+INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:1:1-33:12
+	package
+		INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:1:1-33:12
+		INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:1:1-33:12
+		INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+	android:versionCode
+		INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:1:1-33:12
+		INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:1:11-69
+uses-sdk
+INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+MERGED from [:sqflite] D:\GithubDesktop\New folder (3)\flutter_test_muchlas\build\sqflite\intermediates\merged_manifest\release\AndroidManifest.xml:5:5-7:41
+MERGED from [:sqflite] D:\GithubDesktop\New folder (3)\flutter_test_muchlas\build\sqflite\intermediates\merged_manifest\release\AndroidManifest.xml:5:5-7:41
+MERGED from [:path_provider_android] D:\GithubDesktop\New folder (3)\flutter_test_muchlas\build\path_provider_android\intermediates\merged_manifest\release\AndroidManifest.xml:5:5-7:41
+MERGED from [:path_provider_android] D:\GithubDesktop\New folder (3)\flutter_test_muchlas\build\path_provider_android\intermediates\merged_manifest\release\AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.window:window-java:1.0.0-beta04] C:\Users\MasDepan\.gradle\caches\transforms-3\0deec26fb05f7d94bf8bf494b5e3f2c4\transformed\jetified-window-java-1.0.0-beta04\AndroidManifest.xml:19:5-21:41
+MERGED from [androidx.window:window-java:1.0.0-beta04] C:\Users\MasDepan\.gradle\caches\transforms-3\0deec26fb05f7d94bf8bf494b5e3f2c4\transformed\jetified-window-java-1.0.0-beta04\AndroidManifest.xml:19:5-21:41
+MERGED from [androidx.window:window:1.0.0-beta04] C:\Users\MasDepan\.gradle\caches\transforms-3\3a06fa4d709f37263b7c7e85c789335e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.window:window:1.0.0-beta04] C:\Users\MasDepan\.gradle\caches\transforms-3\3a06fa4d709f37263b7c7e85c789335e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\MasDepan\.gradle\caches\transforms-3\5b140b2fbc5ba3534a23c34630a2f4d7\transformed\fragment-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\MasDepan\.gradle\caches\transforms-3\5b140b2fbc5ba3534a23c34630a2f4d7\transformed\fragment-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\1f7b89c36c0cdb8344cc6dc2cf9a8b8b\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\1f7b89c36c0cdb8344cc6dc2cf9a8b8b\transformed\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\d9ebad2b8476dadc22169716b8022481\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\d9ebad2b8476dadc22169716b8022481\transformed\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\1166282b2f9c18a85ee9a3d180577a4d\transformed\jetified-activity-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\1166282b2f9c18a85ee9a3d180577a4d\transformed\jetified-activity-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\8ac02fb2d3b6f96778ce29ccd7d03b81\transformed\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\8ac02fb2d3b6f96778ce29ccd7d03b81\transformed\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.6.0] C:\Users\MasDepan\.gradle\caches\transforms-3\8aa380b725d1804d361ef430e9acbf20\transformed\core-1.6.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core:1.6.0] C:\Users\MasDepan\.gradle\caches\transforms-3\8aa380b725d1804d361ef430e9acbf20\transformed\core-1.6.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.2.0] C:\Users\MasDepan\.gradle\caches\transforms-3\d42cf1552b8aea3333aa06c9d81d5b5f\transformed\lifecycle-runtime-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.2.0] C:\Users\MasDepan\.gradle\caches\transforms-3\d42cf1552b8aea3333aa06c9d81d5b5f\transformed\lifecycle-runtime-2.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\068d140211987e5e1635c98743b847b6\transformed\jetified-savedstate-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\068d140211987e5e1635c98743b847b6\transformed\jetified-savedstate-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\89de5576bdf53869a9fec7d9943957be\transformed\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\89de5576bdf53869a9fec7d9943957be\transformed\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\30b45b30faa6f96c56c53bc901062cbf\transformed\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\30b45b30faa6f96c56c53bc901062cbf\transformed\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.tracing:tracing:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\91f78dc8135531cb476cfddec3f1974b\transformed\jetified-tracing-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.tracing:tracing:1.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\91f78dc8135531cb476cfddec3f1974b\transformed\jetified-tracing-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\1fc0652e740e00d03170ddf41e52b0cb\transformed\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\MasDepan\.gradle\caches\transforms-3\1fc0652e740e00d03170ddf41e52b0cb\transformed\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\MasDepan\.gradle\caches\transforms-3\99d056d3f42c91ccdde5b1c9ff8aeb74\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\MasDepan\.gradle\caches\transforms-3\99d056d3f42c91ccdde5b1c9ff8aeb74\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\MasDepan\.gradle\caches\transforms-3\cf233e2686141d61429e936d501ee391\transformed\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\MasDepan\.gradle\caches\transforms-3\cf233e2686141d61429e936d501ee391\transformed\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.1.0] C:\Users\MasDepan\.gradle\caches\transforms-3\8c8f75d118ce4fd750517df5ecde6a4f\transformed\jetified-annotation-experimental-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.annotation:annotation-experimental:1.1.0] C:\Users\MasDepan\.gradle\caches\transforms-3\8c8f75d118ce4fd750517df5ecde6a4f\transformed\jetified-annotation-experimental-1.1.0\AndroidManifest.xml:20:5-22:41
+INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+		INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+		INJECTED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml
+activity#com.muchlas.yeshealth.MainActivity
+ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:6:9-26:20
+	android:launchMode
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:9:13-43
+	android:hardwareAccelerated
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:12:13-47
+	android:windowSoftInputMode
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:13:13-55
+	android:exported
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:8:13-36
+	android:configChanges
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:11:13-163
+	android:theme
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:10:13-47
+	android:name
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:7:13-41
+meta-data#io.flutter.embedding.android.NormalTheme
+ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:18:13-21:17
+	android:resource
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:20:15-52
+	android:name
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:19:15-70
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:22:13-25:29
+action#android.intent.action.MAIN
+ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:23:17-68
+	android:name
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:23:25-66
+category#android.intent.category.LAUNCHER
+ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:24:17-76
+	android:name
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:24:27-74
+meta-data#flutterEmbedding
+ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:29:9-31:33
+	android:value
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:31:13-30
+	android:name
+		ADDED from D:\GithubDesktop\New folder (3)\flutter_test_muchlas\android\app\src\main\AndroidManifest.xml:30:13-44
+uses-library#androidx.window.extensions
+ADDED from [androidx.window:window:1.0.0-beta04] C:\Users\MasDepan\.gradle\caches\transforms-3\3a06fa4d709f37263b7c7e85c789335e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:25:9-27:40
+	android:required
+		ADDED from [androidx.window:window:1.0.0-beta04] C:\Users\MasDepan\.gradle\caches\transforms-3\3a06fa4d709f37263b7c7e85c789335e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:27:13-37
+	android:name
+		ADDED from [androidx.window:window:1.0.0-beta04] C:\Users\MasDepan\.gradle\caches\transforms-3\3a06fa4d709f37263b7c7e85c789335e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:26:13-54
+uses-library#androidx.window.sidecar
+ADDED from [androidx.window:window:1.0.0-beta04] C:\Users\MasDepan\.gradle\caches\transforms-3\3a06fa4d709f37263b7c7e85c789335e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:28:9-30:40
+	android:required
+		ADDED from [androidx.window:window:1.0.0-beta04] C:\Users\MasDepan\.gradle\caches\transforms-3\3a06fa4d709f37263b7c7e85c789335e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:30:13-37
+	android:name
+		ADDED from [androidx.window:window:1.0.0-beta04] C:\Users\MasDepan\.gradle\caches\transforms-3\3a06fa4d709f37263b7c7e85c789335e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:29:13-51

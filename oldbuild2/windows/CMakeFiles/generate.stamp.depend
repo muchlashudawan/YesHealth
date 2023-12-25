@@ -1,0 +1,21 @@
+# CMake generation dependency list for this directory.
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/CMakeFiles/3.25.1-msvc1/CMakeCXXCompiler.cmake
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/CMakeFiles/3.25.1-msvc1/CMakeRCCompiler.cmake
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/CMakeFiles/3.25.1-msvc1/CMakeSystem.cmake
+D:/GithubDesktop/flutterProjects/YesHealth/windows/CMakeLists.txt
+D:/GithubDesktop/flutterProjects/YesHealth/windows/flutter/generated_plugins.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/CMakeCXXInformation.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/CMakeGenericSystem.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/CMakeRCInformation.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/Compiler/MSVC-CXX.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/Compiler/MSVC.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/Platform/Windows-MSVC-CXX.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/Platform/Windows-MSVC.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/Platform/Windows.cmake
+D:/Program Files/VSCodeCommunity/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.25/Modules/Platform/WindowsPaths.cmake

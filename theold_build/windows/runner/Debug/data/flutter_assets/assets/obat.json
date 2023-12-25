@@ -1,0 +1,157 @@
+{
+    "analgesik": [{
+            "nama": "Parasetamol",
+            "jenis": "Obat oral",
+            "deskripsi": "Parasetamol adalah analgesik yang digunakan untuk meredakan rasa sakit dan menurunkan demam. Cocok untuk mengatasi nyeri ringan hingga sedang.",
+            "harga": 5000
+        },
+        {
+            "nama": "Ibuprofen",
+            "jenis": "Obat oral",
+            "deskripsi": "Ibuprofen adalah analgesik dan antiinflamasi nonsteroid (AINS) yang membantu meredakan nyeri, peradangan, dan demam.",
+            "harga": 7000
+        },
+        {
+            "nama": "Aspirin",
+            "jenis": "Obat oral",
+            "deskripsi": "Aspirin adalah analgesik, antipiretik, dan antiinflamasi nonsteroid (AINS). Selain meredakan nyeri, juga dapat membantu mengurangi pembekuan darah.",
+            "harga": 6000
+        },
+        {
+            "nama": "Tramadol",
+            "jenis": "Obat oral",
+            "deskripsi": "Tramadol adalah analgesik opioid yang digunakan untuk mengatasi nyeri sedang hingga berat. Harap digunakan sesuai petunjuk dokter.",
+            "harga": 10000
+        },
+        {
+            "nama": "Naproxen",
+            "jenis": "Obat oral",
+            "deskripsi": "Naproxen adalah AINS yang membantu meredakan nyeri, peradangan, dan demam. Cocok untuk pengobatan jangka pendek.",
+            "harga": 8000
+        }
+    ],
+    "antibiotik": [{
+            "nama": "Amoksisilin",
+            "jenis": "Kapsul oral",
+            "deskripsi": "Amoksisilin adalah antibiotik golongan penisilin yang digunakan untuk mengatasi infeksi bakteri, seperti infeksi saluran pernapasan.",
+            "harga": 15000
+        },
+        {
+            "nama": "Ciprofloxacin",
+            "jenis": "Tablet oral",
+            "deskripsi": "Ciprofloxacin adalah antibiotik kuinolon yang efektif melawan bakteri tertentu. Digunakan untuk mengatasi infeksi saluran kemih dan sistem pencernaan.",
+            "harga": 20000
+        },
+        {
+            "nama": "Azitromisin",
+            "jenis": "Tablet oral",
+            "deskripsi": "Azitromisin adalah antibiotik makrolida yang digunakan untuk mengatasi infeksi saluran pernapasan dan infeksi kulit.",
+            "harga": 18000
+        },
+        {
+            "nama": "Doxycycline",
+            "jenis": "Kapsul oral",
+            "deskripsi": "Doxycycline adalah antibiotik tetracycline yang sering digunakan untuk mengobati infeksi akibat bakteri atau protozoa.",
+            "harga": 22000
+        },
+        {
+            "nama": "Clindamycin",
+            "jenis": "Kapsul oral",
+            "deskripsi": "Clindamycin adalah antibiotik lincosamide yang efektif melawan bakteri anaerob dan beberapa bakteri Gram positif.",
+            "harga": 25000
+        }
+    ],
+    "antipiretik": [{
+            "nama": "Parasetamol (acetaminophen)",
+            "jenis": "Tablet oral",
+            "deskripsi": "Parasetamol adalah antipiretik dan analgesik yang digunakan untuk menurunkan demam dan meredakan nyeri.",
+            "harga": 5000
+        },
+        {
+            "nama": "Ibuprofen",
+            "jenis": "Sirup oral",
+            "deskripsi": "Ibuprofen dalam bentuk sirup cocok untuk anak-anak sebagai penurun demam dan penghilang nyeri.",
+            "harga": 8000
+        },
+        {
+            "nama": "Aspirin",
+            "jenis": "Tablet kunyah",
+            "deskripsi": "Aspirin kunyah membantu menurunkan demam dan meredakan nyeri dengan cepat. Tidak cocok untuk anak-anak.",
+            "harga": 7000
+        },
+        {
+            "nama": "Naproxen",
+            "jenis": "Tablet oral",
+            "deskripsi": "Naproxen adalah antipiretik dan AINS yang membantu menurunkan demam dan meredakan nyeri.",
+            "harga": 9000
+        },
+        {
+            "nama": "Diphenhydramine",
+            "jenis": "Tablet oral",
+            "deskripsi": "Diphenhydramine adalah antipiretik dan antihistamin yang juga membantu meredakan alergi.",
+            "harga": 6000
+        }
+    ],
+    "antihistamin": [{
+            "nama": "Loratadin",
+            "jenis": "Tablet oral",
+            "deskripsi": "Loratadin adalah antihistamin yang digunakan untuk meredakan gejala alergi, seperti pilek dan gatal-gatal.",
+            "harga": 7000
+        },
+        {
+            "nama": "Cetirizine",
+            "jenis": "Tablet oral",
+            "deskripsi": "Cetirizine membantu mengatasi reaksi alergi dan gejala seperti hidung tersumbat dan mata berair.",
+            "harga": 6000
+        },
+        {
+            "nama": "Fexofenadine",
+            "jenis": "Tablet oral",
+            "deskripsi": "Fexofenadine adalah antihistamin non-sedatif yang efektif untuk meredakan alergi.",
+            "harga": 8000
+        },
+        {
+            "nama": "Diphenhydramine",
+            "jenis": "Tablet oral",
+            "deskripsi": "Diphenhydramine tidak hanya antipiretik, tetapi juga membantu meredakan alergi dan gangguan tidur.",
+            "harga": 6000
+        },
+        {
+            "nama": "Desloratadine",
+            "jenis": "Tablet oral",
+            "deskripsi": "Desloratadine adalah antihistamin generasi kedua yang efektif untuk mengatasi alergi.",
+            "harga": 9000
+        }
+    ],
+    "antijamur": [{
+            "nama": "Fluconazole",
+            "jenis": "Kapsul oral",
+            "deskripsi": "Fluconazole adalah antijamur azol yang digunakan untuk mengatasi infeksi jamur, terutama pada kulit dan kuku.",
+            "harga": 12000
+        },
+        {
+            "nama": "Terbinafin",
+            "jenis": "Krim topikal",
+            "deskripsi": "Terbinafin adalah antijamur yang digunakan untuk mengobati infeksi jamur pada kulit dan kuku.",
+            "harga": 15000
+        },
+        {
+            "nama": "Clotrimazole",
+            "jenis": "Krim topikal",
+            "deskripsi": "Clotrimazole membantu mengatasi infeksi jamur pada kulit dan selaput lendir.",
+            "harga": 10000
+        },
+        {
+            "nama": "Miconazole",
+            "jenis": "Salep topikal",
+            "deskripsi": "Miconazole adalah antijamur yang efektif untuk mengatasi infeksi jamur pada kulit dan area tertentu.",
+            "harga": 11000
+        },
+        {
+            "nama": "Ketoconazole",
+            "jenis": "Sampo",
+            "deskripsi": "Ketoconazole dalam bentuk sampo digunakan untuk mengatasi ketombe dan infeksi jamur pada kulit kepala.",
+            "harga": 14000
+        }
+    ]
+}

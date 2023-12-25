@@ -16,23 +16,17 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
-  final TextEditingController _namaController = TextEditingController();
-
   String? _usernameError;
   String? _passwordError;
-  String? _emailError;
-  String? _namaError;
 
   void _registerUser() async {
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
     String email = _emailController.text.trim();
-    String nama = _namaController.text.trim();
 
     print("Username: " + username);
     print("Password: " + password);
     print("Email: " + email);
-    print("Name: " + nama);
 
     // USERNAME VALIDATION
     if (!(RegExp(r'^[a-zA-Z0-9]+$').hasMatch(username))) {
@@ -93,35 +87,10 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
       });
     }
 
-    // EMAIL VALIDATION
-    if (!(RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
-        .hasMatch(email))) {
-      setState(() {
-        _emailError = 'Alamat Email Tidak Valid';
-      });
-      return;
-    } else {
-      setState(() {
-        _emailError = null;
-      });
-    }
-
-    // NAMA VALIDATION
-    if (nama.length < 2) {
-      setState(() {
-        _namaError = 'Nama Lengkap harus memiliki minimal 2 karakter.';
-      });
-      return;
-    } else {
-      setState(() {
-        _namaError = null;
-      });
-    }
-
     print("All Good!");
 
     // Check if the username already exists
-    User? existingUser = await DatabaseHelper().getUserByUsername(username);
+    UserManager? existingUser = await ManagerDatabaseHelper().getManagerByUsername(username);
     if (existingUser != null) {
       setState(() {
         _usernameError = 'Username sudah digunakan. Pilih username lain.';
@@ -130,20 +99,6 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
     } else {
       setState(() {
         _usernameError = null;
-      });
-    }
-
-    // Check if the email already exists
-    existingUser = await DatabaseHelper().getUserByEmail(email);
-    if (existingUser != null) {
-      setState(() {
-        _emailError =
-            'Alamat email sudah digunakan. Gunakan alamat email lain.';
-      });
-      return;
-    } else {
-      setState(() {
-        _emailError = null;
       });
     }
 
@@ -162,7 +117,8 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
         username: username,
         password: password,
         email: email,
-        namaLengkap: nama);
+        type: "manager"
+    );
 
     // Insert user into the database
     ManagerDatabaseHelper()
@@ -182,7 +138,8 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daftar Akun'),
+        title: Text('Daftar Akun Manager'),
+        backgroundColor: Colors.black,
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -192,7 +149,7 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
             children: [
               Title(
                 child: const Text(
-                    "Silahkan Masukan Data Diri Anda Untuk Membuat Akun YesHealth.",
+                    "Silahkan Masukan Username & Password Anda Untuk Membuat Akun Manager YesHealth.",
                     textScaleFactor: 1.2),
                 color: Colors.black,
               ),
@@ -217,16 +174,6 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
                     MaxLengthEnforcement.enforced, // Enforce the maximum length
               ),
               TextField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Alamat Email',
-                  errorText: _emailError,
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red),
-                  ),
-                ),
-              ),
-              TextField(
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
@@ -237,22 +184,16 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 16.0),
-              Title(
-                child: const Text("Data Diri Anda", textScaleFactor: 1),
-                color: Colors.black,
-              ),
-              TextField(
-                controller: _namaController,
-                decoration: InputDecoration(
-                  labelText: 'Nama Lengkap',
-                  errorText: _namaError,
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red),
-                  ),
+              SizedBox(height: 24.0),
+              ElevatedButton(
+                onPressed: _registerUser,
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                  minimumSize: MaterialStateProperty.all<Size>(Size(200, 50)), // Adjust the size as needed
+
                 ),
-                maxLength: 64, // Set the maximum length to 3 characters
-                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                child: Text('Buat Akun Manager',
+                    style: TextStyle(color: Colors.white)),
               ),
             ],
           ),

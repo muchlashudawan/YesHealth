@@ -4,7 +4,7 @@ abstract class UserBase {
   String get username;
   String get password;
   String get email;
-  String get namaLengkap;
+  String get type;
 
   Map<String, dynamic> toMap();
 }
@@ -19,6 +19,8 @@ class User implements UserBase {
   late int umur;
   late String jenisKelamin;
   late String tanggalLahir;
+  late String nomorTelpon;
+  late String type;
 
   User({
     required this.id,
@@ -30,6 +32,8 @@ class User implements UserBase {
     required this.umur,
     required this.jenisKelamin,
     required this.tanggalLahir,
+    required this.nomorTelpon,
+    required this.type,
   });
 
   factory User.fromMap(Map<String, dynamic> map) {
@@ -42,7 +46,9 @@ class User implements UserBase {
       alamat: map['alamat'],
       umur: map['umur'],
       jenisKelamin: map['jenisKelamin'],
-      tanggalLahir: map['tanggalLahir']
+      tanggalLahir: map['tanggalLahir'],
+      nomorTelpon: map['nomorTelpon'],
+      type: map['type']
     );
   }
 
@@ -57,6 +63,8 @@ class User implements UserBase {
       'umur': umur,
       'jenisKelamin': jenisKelamin,
       'tanggalLahir': tanggalLahir,
+      'nomorTelpon': nomorTelpon,
+      'type': type,
     };
   }
 }
@@ -69,13 +77,13 @@ class UserManager implements UserBase {
   late String username;
   late String password;
   late String email;
-  late String namaLengkap;
+  late String type;
 
   UserManager({
     required this.username,
     required this.password,
     required this.email,
-    required this.namaLengkap,
+    required this.type,
   });
 
   factory UserManager.fromMap(Map<String, dynamic> map) {
@@ -83,7 +91,7 @@ class UserManager implements UserBase {
       username: map['username'],
       password: map['password'],
       email: map['email'],
-      namaLengkap: map['namaLengkap'],
+      type: map['type'],
     );
   }
 
@@ -92,7 +100,7 @@ class UserManager implements UserBase {
       'username': username,
       'password': password,
       'email': email,
-      'namaLengkap': namaLengkap,
+      'type': type,
     };
   }
 }

@@ -1,0 +1,13 @@
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/CMakeFiles/INSTALL.dir
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/CMakeFiles/ALL_BUILD.dir
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/CMakeFiles/ZERO_CHECK.dir
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/flutter/CMakeFiles/flutter_wrapper_plugin.dir
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/flutter/CMakeFiles/flutter_wrapper_app.dir
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/flutter/CMakeFiles/flutter_assemble.dir
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/flutter/CMakeFiles/INSTALL.dir
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/runner/CMakeFiles/flutter_test_muchlas.dir
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/runner/CMakeFiles/INSTALL.dir
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/runner/CMakeFiles/ALL_BUILD.dir
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/plugins/window_size/CMakeFiles/window_size_plugin.dir
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/plugins/window_size/CMakeFiles/INSTALL.dir
+D:/GithubDesktop/flutterProjects/YesHealth/build/windows/plugins/window_size/CMakeFiles/ALL_BUILD.dir

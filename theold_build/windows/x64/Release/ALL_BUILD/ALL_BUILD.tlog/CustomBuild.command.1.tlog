@@ -1,0 +1,10 @@
+^D:\GITHUBDESKTOP\NEW FOLDER (3)\FLUTTER_TEST_MUCHLAS\WINDOWS\CMAKELISTS.TXT
+setlocal
+"D:\Program Files\VSCodeCommunity\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-SD:/GithubDesktop/New folder (3)/flutter_test_muchlas/windows" "-BD:/GithubDesktop/New folder (3)/flutter_test_muchlas/build/windows" --check-stamp-file "D:/GithubDesktop/New folder (3)/flutter_test_muchlas/build/windows/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

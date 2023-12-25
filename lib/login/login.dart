@@ -5,6 +5,7 @@ import './register.dart';
 import '../manager_pages/create.dart';
 import '../database_helper.dart';
 import '../user_model.dart';
+import '../manager_pages/home.dart';
 
 class UserData extends ChangeNotifier {
   bool isLoggedIn = false;
@@ -26,7 +27,6 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -36,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   void _login(BuildContext context) async {
     var userData = Provider.of<UserData>(context, listen: false);
     final DatabaseHelper dbHelper = DatabaseHelper();
+    final ManagerDatabaseHelper managerDbHelper = ManagerDatabaseHelper();
 
     print(clickCount);
 
@@ -49,27 +50,43 @@ class _LoginPageState extends State<LoginPage> {
     String password = _passwordController.text.trim();
 
     // Perform the actual login with database check
-    User? user = await dbHelper.getUser(username, password);
+    UserManager? manager = await managerDbHelper.getManager(username, password);
 
-    if (user != null) {
+    if (manager != null) {
       clickCount = 0;
-      print("Login OK");
-      userData.login(user); // Store the logged-in user information
+      print("Login as Manager OK");
+      userData.login(manager);
 
-      // Navigate to the home page
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => MyMainApp()),
+        MaterialPageRoute(builder: (context) => HomeManagerPage()),
+        (route) => false, // This line removes all existing routes from the stack
       );
     } else {
-      clickCount = 0;
-      print("Login Not OK");
+      // If manager is not found, try searching in users
+      User? user = await dbHelper.getUser(username, password);
 
-      // Handle invalid login credentials
-      // Set error message for display
-      setState(() {
-        _errorMessage = "Username Atau Password Tidak Valid. Mohon Coba Lagi.";
-      });
+      if (user != null) {
+        clickCount = 0;
+        print("Login as User OK");
+        userData.login(user); // Store the logged-in user information
+
+        // Navigate to the home page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyMainApp()),
+        );
+      } else {
+        clickCount = 0;
+        print("Login Not OK");
+
+        // Handle invalid login credentials
+        // Set error message for display
+        setState(() {
+          _errorMessage =
+              "Username atau Password tidak valid. Mohon coba lagi.";
+        });
+      }
     }
   }
 
@@ -98,22 +115,21 @@ class _LoginPageState extends State<LoginPage> {
             TextButton(
               onPressed: () {
                 // Perform action based on the entered code
-                if (enteredCode == 'analwalker') {
-                  try {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            RegistrationManagerPage(),
-                      ),
-                    );
-                  } catch (e) {
-                    print("Error during navigation: $e");
-                  }
+                if (enteredCode == 'a') {
+                  print("Password OK. going to registeration for manager.");
+                  // Use Navigator to navigate to RegistrationManagerPage
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RegistrationManagerPage()),
+                  );
+                } else {
+                  Navigator.of(context).pop();
+                  print("popup closed.");
                 }
 
                 clickCount = 0;
-                Navigator.of(context).pop(); // Close the dialog
+                print("popup end.");
               },
               child: Text('Go!'),
             ),

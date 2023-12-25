@@ -1,0 +1,28 @@
+^D:\GITHUBDESKTOP\NEW FOLDER (3)\FLUTTER_TEST_MUCHLAS\BUILD\WINDOWS\CMAKEFILES\D16FCB8A562175C1DF4AB84DB8A83221\FLUTTER_WINDOWS.DLL.RULE
+setlocal
+"D:\Program Files\VSCodeCommunity\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E env "FLUTTER_ROOT=E:\Flutter 3.13.9\flutter" "PROJECT_DIR=D:\GithubDesktop\New folder (3)\flutter_test_muchlas" "FLUTTER_ROOT=E:\Flutter 3.13.9\flutter" "FLUTTER_EPHEMERAL_DIR=D:\GithubDesktop\New folder (3)\flutter_test_muchlas\windows\flutter\ephemeral" "PROJECT_DIR=D:\GithubDesktop\New folder (3)\flutter_test_muchlas" FLUTTER_TARGET=lib\main.dart DART_OBFUSCATION=false TRACK_WIDGET_CREATION=true TREE_SHAKE_ICONS=true "PACKAGE_CONFIG=D:\GithubDesktop\New folder (3)\flutter_test_muchlas\.dart_tool\package_config.json" "E:/Flutter 3.13.9/flutter/packages/flutter_tools/bin/tool_backend.bat" windows-x64 Release
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\GITHUBDESKTOP\NEW FOLDER (3)\FLUTTER_TEST_MUCHLAS\BUILD\WINDOWS\CMAKEFILES\1393BDE63343F38CDED89B13B49AD1D9\FLUTTER_ASSEMBLE.RULE
+setlocal
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^D:\GITHUBDESKTOP\NEW FOLDER (3)\FLUTTER_TEST_MUCHLAS\WINDOWS\FLUTTER\CMAKELISTS.TXT
+setlocal
+"D:\Program Files\VSCodeCommunity\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" "-SD:/GithubDesktop/New folder (3)/flutter_test_muchlas/windows" "-BD:/GithubDesktop/New folder (3)/flutter_test_muchlas/build/windows" --check-stamp-file "D:/GithubDesktop/New folder (3)/flutter_test_muchlas/build/windows/flutter/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

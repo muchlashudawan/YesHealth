@@ -1,0 +1,34 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.tekartik.sqflite-merged_res-10:/values-vi/values-vi.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\MasDepan\\.gradle\\caches\\transforms-3\\8aa380b725d1804d361ef430e9acbf20\\transformed\\core-1.6.0\\res\\values-vi\\values-vi.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "com.tekartik.sqflite-mergeReleaseResources-8:/values-vi/values-vi.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\MasDepan\\.gradle\\caches\\transforms-3\\8aa380b725d1804d361ef430e9acbf20\\transformed\\core-1.6.0\\res\\values-vi\\values-vi.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    }
+                }
+            ]
+        }
+    ]
+}
