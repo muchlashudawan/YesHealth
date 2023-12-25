@@ -19,7 +19,7 @@ class User implements UserBase {
   late int umur;
   late String jenisKelamin;
   late String tanggalLahir;
-  late String nomorTelpon;
+  late int nomorTelpon;
   late String type;
 
   User({
@@ -38,17 +38,17 @@ class User implements UserBase {
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: map['id'],
-      username: map['username'],
-      password: map['password'],
-      email: map['email'],
-      namaLengkap: map['namaLengkap'],
-      alamat: map['alamat'],
-      umur: map['umur'],
-      jenisKelamin: map['jenisKelamin'],
-      tanggalLahir: map['tanggalLahir'],
-      nomorTelpon: map['nomorTelpon'],
-      type: map['type']
+      id: map['id'] ?? 0,
+      username: map['username'] ?? '',
+      password: map['password'] ?? '',
+      email: map['email'] ?? '',
+      namaLengkap: map['namaLengkap'] ?? '',
+      alamat: map['alamat'] ?? '',
+      umur: map['umur'] ?? 0,
+      jenisKelamin: map['jenisKelamin'] ?? '',
+      tanggalLahir: map['tanggalLahir'] ?? '',
+      nomorTelpon: map['nomorTelpon'] ?? 0,
+      type: map['type'] ?? '',
     );
   }
 

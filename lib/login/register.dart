@@ -73,6 +73,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     print("Umur: " + umur);
     print("Tgl. Lahir: " + tanggalLahir);
     print("Gender: " + gender);
+    print("noTelp: " + nomorTelpon);
 
     // USERNAME VALIDATION
     if (!(RegExp(r'^[a-zA-Z0-9]+$').hasMatch(username))) {
@@ -259,7 +260,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       umur: int.parse(umur),
       alamat: alamat,
       tanggalLahir: tanggalLahir,
-      nomorTelpon: nomorTelpon,
+      nomorTelpon: int.parse(nomorTelpon),
       type: "customer",
       jenisKelamin: gender,
     );
@@ -389,8 +390,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   labelText: 'Nomor Telpon',
                   border: OutlineInputBorder(),
                 ),
+                initialCountryCode: 'IND',
                 onChanged: (phone) {
-                  print(phone.completeNumber); // Get the complete phone number
+                  print(phone.completeNumber);
                 },
               ),
               TextField(

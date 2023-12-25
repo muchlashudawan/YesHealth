@@ -29,7 +29,7 @@ class DatabaseHelper {
       version: 1,
       onCreate: (db, version) async {
         await db.execute('''
-          CREATE TABLE users(
+         CREATE TABLE users(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT,
             password TEXT,
@@ -38,7 +38,9 @@ class DatabaseHelper {
             alamat TEXT,
             umur INTEGER,
             jenisKelamin TEXT,
-            tanggalLahir TEXT
+            tanggalLahir TEXT,
+            nomorTelpon INTEGER,
+            type TEXT
           )
         ''');
       },
@@ -113,7 +115,7 @@ class ManagerDatabaseHelper extends DatabaseHelper {
     return _managerInstance;
   }
 
-  ManagerDatabaseHelper._internal() : super._internal(); 
+  ManagerDatabaseHelper._internal() : super._internal();
 
   @override
   Future<Database> initDatabase() async {
@@ -132,7 +134,8 @@ class ManagerDatabaseHelper extends DatabaseHelper {
             username TEXT,
             password TEXT,
             email TEXT,
-            namaLengkap TEXT
+            namaLengkap TEXT,
+            type TEXT
           )
         ''');
       },

@@ -115,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
             TextButton(
               onPressed: () {
                 // Perform action based on the entered code
-                if (enteredCode == 'a') {
+                if (enteredCode == 'sehatselalu') {
                   print("Password OK. going to registeration for manager.");
                   // Use Navigator to navigate to RegistrationManagerPage
                   Navigator.push(
