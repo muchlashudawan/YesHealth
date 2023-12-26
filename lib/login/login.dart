@@ -150,11 +150,8 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Positioned.fill(
-                child: Image.asset(
-                  'assets/login_bg.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
+                    child: Image.asset('assets/login_bg.png'),
+                  ),
               Title(
                 child: GestureDetector(
                   onTap: () {

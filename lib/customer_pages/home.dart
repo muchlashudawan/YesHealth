@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class HomePage extends StatelessWidget {
   Future<String> loadAsset() async {
@@ -19,8 +20,8 @@ class HomePage extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.lightBlue,
-                Colors.lightBlue.withOpacity(0.0), // Fade to transparent
+                Colors.green,
+                Colors.green.withOpacity(0.0), // Fade to transparent
               ],
             ),
             borderRadius: BorderRadius.only(

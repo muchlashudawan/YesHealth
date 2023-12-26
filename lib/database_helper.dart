@@ -22,12 +22,9 @@ class DatabaseHelper {
   }
 
   Future<Database> initDatabase() async {
-    if (!kIsWeb) {
-      if (Platform.isWindows || Platform.isLinux) {
-        sqfliteFfiInit();
-      }
-    } else {
-        databaseFactory = databaseFactoryFfi;
+    if (Platform.isWindows || Platform.isLinux) {
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
     }
 
     final path = join(await getDatabasesPath(), 'user_database.db');
@@ -127,13 +124,9 @@ class ManagerDatabaseHelper extends DatabaseHelper {
 
   @override
   Future<Database> initDatabase() async {
-    if (!kIsWeb) {
-      if (Platform.isWindows || Platform.isLinux) {
-        sqfliteFfiInit();
-        databaseFactory = databaseFactoryFfi;
-      }
-    } else {
-        databaseFactory = databaseFactoryFfi;
+    if (Platform.isWindows || Platform.isLinux) {
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
     }
 
     final path = join(await getDatabasesPath(), 'manager_database.db');

@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 import '../user_model.dart';
 import '../login/login.dart';
@@ -68,7 +69,7 @@ class Profile extends StatelessWidget {
                             // Use a blue gradient color
                             foreground: Paint()
                               ..shader = LinearGradient(
-                                colors: [Colors.blue, Colors.lightBlueAccent],
+                                colors: [Colors.green, HexColor('8ADAB2')],
                               ).createShader(
                                   Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
                           ),
@@ -123,19 +124,23 @@ class Profile extends StatelessWidget {
                 Expanded(
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        var userData =
-                            Provider.of<UserData>(context, listen: false);
-                        userData.logout();
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginPage(),
-                          ),
-                        );
-                      },
-                      child: Text('Logout'),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          bottom: 70.0), // Adjust the value as needed
+                      child: ElevatedButton(
+                        onPressed: () {
+                          var userData =
+                              Provider.of<UserData>(context, listen: false);
+                          userData.logout();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ),
+                          );
+                        },
+                        child: Text('Logout'),
+                      ),
                     ),
                   ),
                 ),
@@ -144,7 +149,8 @@ class Profile extends StatelessWidget {
           );
         } else {
           return Center(
-              child: Text("Not Logged In",
+              child: Text(
+            "Not Logged In",
             style: TextStyle(
               fontSize: 20.0, // Make the text size normal
               fontWeight: FontWeight.w600, // Light font weight
