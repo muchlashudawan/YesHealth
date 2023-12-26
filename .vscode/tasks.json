@@ -1,0 +1,35 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Flutter-Launch-All",
+        "dependsOn": [
+          "Flutter-Launch-iOS",
+          "Flutter-Launch-Android",
+          "Flutter-Launch-Windows"
+        ]
+      },
+      {
+        "label": "Flutter-Launch-Windroid",
+        "dependsOn": [
+          "Flutter-Launch-Android",
+          "Flutter-Launch-Windows"
+        ]
+      },
+      {
+        "label": "Flutter-Launch-IOS-Iphone14ProMax",
+        "type": "shell",
+        "command": "flutter run -d 'iPhone 11 Pro Max' "
+      },
+      {
+        "label": "Flutter-Launch-Android-POCOX3",
+        "type": "shell",
+        "command": "flutter run -d 'M2007J20CG' "
+      },
+      {
+        "label": "Flutter-Launch-Windows",
+        "type": "shell",
+        "command": "flutter run -d 'Windows' "
+      }
+    ]
+  }

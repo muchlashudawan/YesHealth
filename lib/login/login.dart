@@ -6,6 +6,7 @@ import '../manager_pages/create.dart';
 import '../database_helper.dart';
 import '../user_model.dart';
 import '../manager_pages/home.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class UserData extends ChangeNotifier {
   bool isLoggedIn = false;
@@ -60,7 +61,8 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => HomeManagerPage()),
-        (route) => false, // This line removes all existing routes from the stack
+        (route) =>
+            false, // This line removes all existing routes from the stack
       );
     } else {
       // If manager is not found, try searching in users
@@ -142,18 +144,20 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 24.0,
-        ),
+      body: SingleChildScrollView(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/login_bg.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
               Title(
                 child: GestureDetector(
                   onTap: () {
-                    // Increment the click count when the Title is tapped
                     setState(() {
                       clickCount++;
                     });
@@ -163,27 +167,30 @@ class _LoginPageState extends State<LoginPage> {
                     textScaleFactor: 2,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
+                      color: HexColor("304D30"),
                     ),
                   ),
                 ),
-                color: Colors.black,
+                color: HexColor("304D30"),
               ),
               Title(
                 child: GestureDetector(
                   onTap: () {
-                    // Increment the click count when the Title is tapped
                     setState(() {
                       clickCount = 0;
                     });
                   },
-                  child: const Text(
+                  child: Text(
                     "Silahkan Login Untuk Mengakses YesHealth",
                     textScaleFactor: 1.2,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: HexColor("739072"),
+                    ),
                   ),
                 ),
-                color: Colors.black,
+                color: HexColor("739072"),
               ),
-              SizedBox(height: 5.0),
               if (_errorMessage != null) ...[
                 SizedBox(height: 15.0),
                 Text(
@@ -191,28 +198,46 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(color: Colors.red),
                 ),
               ],
+              SizedBox(height: 16.0),
               Container(
-                width: 300, // Set the width as per your requirement
+                width: 300,
                 child: TextField(
                   controller: _usernameController,
-                  decoration: InputDecoration(labelText: 'Username'),
+                  decoration: InputDecoration(
+                    labelText: 'Username',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: HexColor("1E5128")),
+                    ),
+                    labelStyle: TextStyle(color: HexColor("1E5128")),
+                  ),
                 ),
               ),
-              SizedBox(height: 5.0),
+              SizedBox(height: 10.0),
               Container(
-                width: 300, // Set the width as per your requirement
+                width: 300,
                 child: TextField(
-                  controller: _passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(labelText: 'Password'),
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: HexColor("304D30")),
+                    ),
+                    labelStyle: TextStyle(color: HexColor("304D30")),
+                  ),
                 ),
               ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 24.0),
               ElevatedButton(
                 onPressed: () {
                   _login(context);
                 },
-                child: Text('Login'),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(HexColor("#004225")),
+                  minimumSize: MaterialStateProperty.all<Size>(Size(200, 50)),
+                ),
+                child: Text('Masuk', style: TextStyle(color: Colors.white)),
               ),
               SizedBox(height: 16.0),
               TextButton(
@@ -222,7 +247,8 @@ class _LoginPageState extends State<LoginPage> {
                     MaterialPageRoute(builder: (context) => RegistrationPage()),
                   );
                 },
-                child: Text('Belum Mempunyai Akun? Daftar.'),
+                child: Text('Belum Mempunyai Akun? Daftar.',
+                    style: TextStyle(color: HexColor("4F6F52"))),
               ),
             ],
           ),

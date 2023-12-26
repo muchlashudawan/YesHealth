@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
@@ -21,11 +22,13 @@ class DatabaseHelper {
   }
 
   Future<Database> initDatabase() async {
-    if (Platform.isWindows || Platform.isLinux) {
-      sqfliteFfiInit();
+    if (!kIsWeb) {
+      if (Platform.isWindows || Platform.isLinux) {
+        sqfliteFfiInit();
+      }
+    } else {
+        databaseFactory = databaseFactoryFfi;
     }
-
-    //databaseFactory = databaseFactoryFfi;
 
     final path = join(await getDatabasesPath(), 'user_database.db');
 
@@ -124,8 +127,13 @@ class ManagerDatabaseHelper extends DatabaseHelper {
 
   @override
   Future<Database> initDatabase() async {
-    if (Platform.isWindows || Platform.isLinux) {
-      sqfliteFfiInit();
+    if (!kIsWeb) {
+      if (Platform.isWindows || Platform.isLinux) {
+        sqfliteFfiInit();
+        databaseFactory = databaseFactoryFfi;
+      }
+    } else {
+        databaseFactory = databaseFactoryFfi;
     }
 
     final path = join(await getDatabasesPath(), 'manager_database.db');

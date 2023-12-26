@@ -26,6 +26,7 @@ dependencies:
   sqflite: ^2.3.0
   sqflite_common_ffi: ^2.3.0+4
   sqlite3_flutter_libs: 0.5.18
+  hexcolor: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -37,3 +38,4 @@ flutter:
   assets:
   - assets/obat.json
   - assets/test_image.png
+  - assets/login_bg.png

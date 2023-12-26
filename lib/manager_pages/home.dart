@@ -35,6 +35,11 @@ class HomeManagerPage extends StatelessWidget {
       return Container(); // Placeholder container, won't be displayed
     }
 
+    void _addItem() async {}
+    void _editItem() async {}
+    void _deleteItem() async {}
+    void _viewItem() async {}
+
     UserBase? loggedInUserBase = userData.loggedInUser;
 
     if (loggedInUserBase != null) {
@@ -59,8 +64,6 @@ class HomeManagerPage extends StatelessWidget {
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Align(
                 alignment: Alignment.topLeft,
@@ -87,10 +90,93 @@ class HomeManagerPage extends StatelessWidget {
                           ),
                       ),
                     ),
+                    SizedBox(height: 24.0),
+                    ElevatedButton(
+                      onPressed: _addItem,
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.black),
+                        minimumSize:
+                            MaterialStateProperty.all<Size>(Size(150, 50)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add,
+                              color: Colors
+                                  .white), // Change to the appropriate icon
+                          SizedBox(width: 8),
+                          Text('Tambah Barang',
+                              style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 8.0),
+                    ElevatedButton(
+                      onPressed: _viewItem,
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.black),
+                        minimumSize:
+                            MaterialStateProperty.all<Size>(Size(150, 50)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.visibility,
+                              color: Colors
+                                  .white), // Change to the appropriate icon
+                          SizedBox(width: 8),
+                          Text('Lihat Barang',
+                              style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 8.0),
+                    ElevatedButton(
+                      onPressed: _editItem,
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.black),
+                        minimumSize:
+                            MaterialStateProperty.all<Size>(Size(150, 50)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.edit,
+                              color: Colors
+                                  .white), // Change to the appropriate icon
+                          SizedBox(width: 8),
+                          Text('Ubah Barang',
+                              style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 8.0),
+                    ElevatedButton(
+                      onPressed: _deleteItem,
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.black),
+                        minimumSize:
+                            MaterialStateProperty.all<Size>(Size(150, 50)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.delete,
+                              color: Colors
+                                  .white), // Change to the appropriate icon
+                          SizedBox(width: 8),
+                          Text('Hapus Barang',
+                              style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-              SizedBox(height: 24.0),
             ],
           ),
         ),

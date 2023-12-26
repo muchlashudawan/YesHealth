@@ -3,11 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:hexcolor/hexcolor.dart';
 import './redirect_register.dart';
 import '../database_helper.dart';
 import '../user_model.dart';
 
 const List<String> genderList = <String>['Laki-Laki', 'Perempuan'];
+
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -36,6 +38,87 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String? _tanggalLahirError;
   String? _genderError;
   String? _noTelpError;
+
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    String? errorText,
+    bool obscureText = false,
+    int? maxLength,
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
+    bool readOnly = false,
+    Widget? suffixIcon,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      maxLength: maxLength,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      readOnly: readOnly,
+      decoration: InputDecoration(
+        labelText: label,
+        errorText: errorText,
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: HexColor("304D30")),
+        ),
+        labelStyle: TextStyle(color: HexColor("304D30")),
+        focusedErrorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
+        ),
+        suffixIcon: suffixIcon,
+      ),
+    );
+  }
+
+  Widget _buildIntlPhoneField({
+    required String label,
+    required TextEditingController controller,
+  }) {
+    return IntlPhoneField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: HexColor("304D30")),
+        ),
+        labelStyle: TextStyle(color: HexColor("304D30")),
+      ),
+      initialCountryCode: 'ID',
+      onChanged: (phone) {
+        print(phone.completeNumber);
+      },
+    );
+  }
+
+  Widget _buildDropdownButtonFormField() {
+    return DropdownButtonFormField<String>(
+      value: dropdownValue,
+      decoration: InputDecoration(
+        errorText: _genderError,
+        focusedErrorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
+        ),
+      ),
+      onChanged: (String? value) {
+        // This is called when the user selects an item.
+        setState(() {
+          dropdownValue = value!;
+          _genderController.text = value;
+        });
+      },
+      items: genderList.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+
+
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -278,12 +361,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   String dropdownValue = 'Laki-Laki'; // Set a default value
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Daftar Akun'),
+        backgroundColor: HexColor("304D30"),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -293,8 +376,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
             children: [
               Title(
                 child: const Text(
-                    "Silahkan Masukan Data Diri Anda Untuk Membuat Akun YesHealth.",
-                    textScaleFactor: 1.2),
+                  "Silahkan Masukan Data Diri Anda Untuk Membuat Akun YesHealth.",
+                  textScaleFactor: 1.2,
+                ),
                 color: Colors.black,
               ),
               SizedBox(height: 16.0),
@@ -303,146 +387,84 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     const Text("Informasi Akun YesHealth", textScaleFactor: 1),
                 color: Colors.black,
               ),
-              TextField(
+              SizedBox(height: 8.0),
+              _buildTextField(
+                label: 'Username',
                 controller: _usernameController,
-                decoration: InputDecoration(
-                  labelText: 'Username',
-                  errorText: _usernameError,
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red),
-                  ),
-                ),
-
-                maxLength: 16, // Set the maximum length to 3 characters
-                maxLengthEnforcement:
-                    MaxLengthEnforcement.enforced, // Enforce the maximum length
+                errorText: _usernameError,
+                maxLength: 16,
               ),
-              TextField(
+              _buildTextField(
+                label: 'Alamat Email',
                 controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Alamat Email',
-                  errorText: _emailError,
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red),
-                  ),
-                ),
+                errorText: _emailError,
               ),
-              TextField(
+              SizedBox(height: 8.0),
+              _buildTextField(
+                label: 'Password',
                 controller: _passwordController,
+                errorText: _passwordError,
                 obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  errorText: _passwordError,
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red),
-                  ),
-                ),
               ),
               SizedBox(height: 16.0),
               Title(
                 child: const Text("Data Diri Anda", textScaleFactor: 1),
                 color: Colors.black,
               ),
-              TextField(
+              SizedBox(height: 8.0),
+              _buildTextField(
+                label: 'Nama Lengkap',
                 controller: _namaController,
-                decoration: InputDecoration(
-                  labelText: 'Nama Lengkap',
-                  errorText: _namaError,
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red),
-                  ),
-                ),
-                maxLength: 64, // Set the maximum length to 3 characters
-                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                errorText: _namaError,
+                maxLength: 64,
               ),
-              TextField(
+              _buildTextField(
+                label: 'Umur',
                 controller: _umurController,
-                decoration: InputDecoration(
-                  labelText: 'Umur',
-                  errorText: _umurError,
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red),
-                  ),
-                ),
+                errorText: _umurError,
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly,
                 ],
-                maxLength: 3, // Set the maximum length to 3 characters
-                maxLengthEnforcement:
-                    MaxLengthEnforcement.enforced, // Enforce the maximum length
+                maxLength: 3,
               ),
-              TextField(
+              _buildTextField(
+                label: 'Alamat',
                 controller: _alamatController,
-                decoration: InputDecoration(
-                  labelText: 'Alamat',
-                  errorText: _alamatError,
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red),
-                  ),
-                ),
-                maxLength: 128, // Set the maximum length to 3 characters
-                maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                errorText: _alamatError,
+                maxLength: 128,
               ),
-              IntlPhoneField(
-                controller: _noTelpController,
-                decoration: InputDecoration(
-                  labelText: 'Nomor Telpon',
-                  border: OutlineInputBorder(),
-                ),
-                initialCountryCode: 'ID',
-                onChanged: (phone) {
-                  print(phone.completeNumber);
-                },
-              ),
-              TextField(
-                controller: _tanggalLahirController,
-                decoration: InputDecoration(
-                  labelText: 'Tanggal Lahir',
-                  errorText: _tanggalLahirError,
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red),
-                  ),
-                  suffixIcon: IconButton(
-                    onPressed: () => _selectDate(context),
-                    icon: Icon(Icons.calendar_today),
-                  ),
-                ),
-                readOnly: true,
-              ),
-              SizedBox(height: 6.0),
               Title(
                 child: const Text("Jenis Kelamin", textScaleFactor: 1),
                 color: Colors.black,
               ),
-              DropdownButtonFormField<String>(
-                value: dropdownValue,
-                decoration: InputDecoration(
-                  errorText: _genderError,
-                  focusedErrorBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.red),
-                  ),
+              _buildDropdownButtonFormField(),
+              SizedBox(height: 16.0),
+              _buildIntlPhoneField(
+                label: 'Nomor Telpon',
+                controller: _noTelpController,
+              ),
+              _buildTextField(
+                label: 'Tanggal Lahir',
+                controller: _tanggalLahirController,
+                errorText: _tanggalLahirError,
+                readOnly: true,
+                suffixIcon: IconButton(
+                  onPressed: () => _selectDate(context),
+                  icon: Icon(Icons.calendar_today),
                 ),
-                onChanged: (String? value) {
-                  // This is called when the user selects an item.
-                  setState(() {
-                    dropdownValue = value!;
-                    _genderController.text = value;
-                  });
-                },
-                items: genderList.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
               ),
               SizedBox(height: 16.0),
-              ElevatedButton(
+               ElevatedButton(
                 onPressed: _registerUser,
-                child: Text('Register'),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(HexColor("004225")),
+                  minimumSize: MaterialStateProperty.all<Size>(Size(200, 50)), // Adjust the size as needed
+
+                ),
+                child: Text('Buat Akun',
+                    style: TextStyle(color: Colors.white)),
               ),
-              SizedBox(height: 16.0),
             ],
           ),
         ),
@@ -450,3 +472,4 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 }
+
