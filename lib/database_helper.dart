@@ -1,4 +1,6 @@
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite/sqflite.dart';
+import 'dart:io';
 import 'package:path/path.dart';
 import './user_model.dart';
 
@@ -19,8 +21,11 @@ class DatabaseHelper {
   }
 
   Future<Database> initDatabase() async {
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
+    if (Platform.isWindows || Platform.isLinux) {
+      sqfliteFfiInit();
+    }
+
+    //databaseFactory = databaseFactoryFfi;
 
     final path = join(await getDatabasesPath(), 'user_database.db');
 
@@ -119,8 +124,9 @@ class ManagerDatabaseHelper extends DatabaseHelper {
 
   @override
   Future<Database> initDatabase() async {
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
+    if (Platform.isWindows || Platform.isLinux) {
+      sqfliteFfiInit();
+    }
 
     final path = join(await getDatabasesPath(), 'manager_database.db');
 

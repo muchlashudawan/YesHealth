@@ -390,7 +390,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   labelText: 'Nomor Telpon',
                   border: OutlineInputBorder(),
                 ),
-                initialCountryCode: 'IND',
+                initialCountryCode: 'ID',
                 onChanged: (phone) {
                   print(phone.completeNumber);
                 },

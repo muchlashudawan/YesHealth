@@ -1,7 +1,7 @@
 name: YesHealth
 description: Pharmachy App
 publish_to: 'none'
-version: 0.1.0
+version: 0.3.0
 
 environment:
   sdk: '>=3.1.5 <4.0.0'
@@ -25,6 +25,7 @@ dependencies:
       ref: fd519be1e8398c6b6c2062c2447bac960a71bc02
   sqflite: ^2.3.0
   sqflite_common_ffi: ^2.3.0+4
+  sqlite3_flutter_libs: 0.5.18
 
 dev_dependencies:
   flutter_test:

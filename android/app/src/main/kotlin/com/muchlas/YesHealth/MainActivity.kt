@@ -1,4 +1,4 @@
-package com.example.flutter_test_muchlas
+package com.muchlas.YesHealth
 
 import io.flutter.embedding.android.FlutterActivity
 
