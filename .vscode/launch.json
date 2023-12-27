@@ -2,27 +2,27 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Flutter-All",
+            "name": "Run on All Devices",
             "preLaunchTask": "Flutter-Launch-All",
             "type": "dart",
         },
         {
-            "name": "Flutter-Windroid",
+            "name": "Run on Windows & Android ",
             "preLaunchTask": "Flutter-Launch-Windroid",
             "type": "dart",
         },
         {
-            "name": "Flutter-iOS",
+            "name": "Run On iPhone 15 Pro Max",
             "preLaunchTask": "Flutter-Launch-iOS",
             "type": "dart",
         },
         {
-            "name": "Flutter-Android",
+            "name": "Run on Android",
             "preLaunchTask": "Flutter-Launch-Android",
             "type": "dart",
         },
         {
-            "name": "Flutter-Windows",
+            "name": "Run on Windows",
             "preLaunchTask": "Flutter-Launch-Windows",
             "type": "dart",
         }

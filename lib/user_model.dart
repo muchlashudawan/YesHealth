@@ -104,3 +104,21 @@ class UserManager implements UserBase {
     };
   }
 }
+
+class Item {
+  int? id;
+  String name;
+  String type;
+  int price;
+
+  Item({this.id, required this.name, required this.type, required this.price});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'type': type,
+      'price': price,
+    };
+  }
+}

@@ -16,12 +16,9 @@ class _CartMenuState extends State<CartMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Shopping Cart"),
-      ),
       body: cartItems.isEmpty
           ? Center(
-              child: Text("Keranjang anda kosong."),
+              child: Text("Keranjang Anda kosong."),
             )
           : Column(
               children: [
@@ -74,9 +71,9 @@ class _CartMenuState extends State<CartMenu> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("Purchase Complete"),
+                              title: Text("Pembelian Selesai."),
                               content: Text(
-                                  "Thank you for your purchase of ${selectedItems.length} items."),
+                                  "Terima kasih atas pembelian Anda sebanyak ${selectedItems.length} item."),
                               actions: [
                                 TextButton(
                                   onPressed: () {
@@ -93,8 +90,8 @@ class _CartMenuState extends State<CartMenu> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("No Items Selected"),
-                              content: Text("Please select items to purchase."),
+                              title: Text("Tidak ada item yang dipilih."),
+                              content: Text("Silakan pilih item untuk dibeli."),
                               actions: [
                                 TextButton(
                                   onPressed: () {
@@ -108,7 +105,10 @@ class _CartMenuState extends State<CartMenu> {
                         );
                       }
                     },
-                    child: Text("Buy"),
+                    child: Text("Beli"),
+                    style: ButtonStyle(
+                      minimumSize: MaterialStateProperty.all<Size>(Size(200, 50)),
+                    )
                   ),
                 ),
               ],

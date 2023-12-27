@@ -25,7 +25,6 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<UserData>(
       builder: (context, userData, child) {
-        // Check if the user is not logged in and navigate to the login page
         if (userData.loggedInUser == null) {
           Future.delayed(Duration.zero, () {
             Navigator.pushReplacement(
@@ -43,91 +42,91 @@ class Profile extends StatelessWidget {
           User user = loggedInUserBase as User; // Use type cast
           return Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16.0, right: 16.0, top: 16.0), // Adjusted padding
-                  child: Align(
-                    alignment: Alignment.topLeft, // Align to the left
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          getGreeting() + ",",
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        getGreeting() + ",",
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        user.namaLengkap,
+                        style: TextStyle(
+                          fontSize: 36.0,
+                          fontWeight: FontWeight.bold,
+                          foreground: Paint()
+                            ..shader = LinearGradient(
+                              colors: [Colors.green, HexColor('8ADAB2')],
+                            ).createShader(
+                                Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                        ),
+                      ),
+                      SizedBox(height: 16.0),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          "Informasi Anda Di YesHealth:",
                           style: TextStyle(
-                            fontSize: 20.0, // Make the text size normal
-                            fontWeight: FontWeight.w600, // Light font weight
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
-                        Text(
-                          user.namaLengkap,
-                          style: TextStyle(
-                            fontSize: 30.0, // Make the text size bold
-                            fontWeight: FontWeight.bold,
-                            // Use a blue gradient color
-                            foreground: Paint()
-                              ..shader = LinearGradient(
-                                colors: [Colors.green, HexColor('8ADAB2')],
-                              ).createShader(
-                                  Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
-                          ),
+                      ),
+                      ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                        leading: Icon(Icons.email),
+                        title: Text(
+                          user.email,
+                          style: TextStyle(fontSize: 18.0),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                // Adjusted spacing between name and user information
-                SizedBox(height: 24.0),
-                Padding(
-                  padding: EdgeInsets.only(left: 16.0), // Add left padding
-                  child: Text(
-                    "Informasi Anda Di YesHealth:",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-                // Display user information with icons
-                ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 0), // Adjusted padding
-                  leading: Icon(Icons.email),
-                  title: Text(user.email),
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 0), // Adjusted padding
-                  leading: Icon(Icons.person),
-                  title: Text('Umur: ${user.umur.toString()}'),
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 0), // Adjusted padding
-                  leading: Icon(Icons.home),
-                  title: Text(user.alamat),
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 0), // Adjusted padding
-                  leading: Icon(Icons.cake),
-                  title: Text('Tanggal Lahir: ${user.tanggalLahir}'),
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 0), // Adjusted padding
-                  leading: Icon(Icons.male),
-                  title: Text('Jenis Kelamin: ${user.jenisKelamin}'),
-                ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                          bottom: 70.0), // Adjust the value as needed
-                      child: ElevatedButton(
+                      ),
+                      ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                        leading: Icon(Icons.person),
+                        title: Text(
+                          'Umur: ${user.umur.toString()}',
+                          style: TextStyle(fontSize: 18.0),
+                        ),
+                      ),
+                      ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                        leading: Icon(Icons.home),
+                        title: Text(
+                          user.alamat,
+                          style: TextStyle(fontSize: 18.0),
+                        ),
+                      ),
+                      ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                        leading: Icon(Icons.cake),
+                        title: Text(
+                          'Tanggal Lahir: ${user.tanggalLahir}',
+                          style: TextStyle(fontSize: 18.0),
+                        ),
+                      ),
+                      ListTile(
+                        dense: true,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                        leading: Icon(Icons.male),
+                        title: Text(
+                          'Jenis Kelamin: ${user.jenisKelamin}',
+                          style: TextStyle(fontSize: 18.0),
+                        ),
+                      ),
+                      SizedBox(height: 16.0),
+                      ElevatedButton(
                         onPressed: () {
                           var userData =
                               Provider.of<UserData>(context, listen: false);
@@ -139,9 +138,16 @@ class Profile extends StatelessWidget {
                             ),
                           );
                         },
-                        child: Text('Logout'),
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.red),
+                          minimumSize:
+                              MaterialStateProperty.all<Size>(Size(200, 50)),
+                        ),
+                        child: Text('Logout',
+                            style: TextStyle(color: Colors.white)),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ],
@@ -149,13 +155,14 @@ class Profile extends StatelessWidget {
           );
         } else {
           return Center(
-              child: Text(
-            "Not Logged In",
-            style: TextStyle(
-              fontSize: 20.0, // Make the text size normal
-              fontWeight: FontWeight.w600, // Light font weight
+            child: Text(
+              "Not Logged In",
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ));
+          );
         }
       },
     );

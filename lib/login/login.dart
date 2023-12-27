@@ -144,112 +144,126 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Positioned.fill(
-                    child: Image.asset('assets/login_bg.png'),
-                  ),
-              Title(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      clickCount++;
-                    });
-                  },
-                  child: Text(
-                    "Selamat Datang",
-                    textScaleFactor: 2,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Image.asset('assets/login_bg.png'),
+          ),
+          Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0), 
+                child: Column(
+                  mainAxisSize: MainAxisSize.min, // Ensures minimum height, avoiding unnecessary scrolling
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Title(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            clickCount++;
+                          });
+                        },
+                        child: Text(
+                          "Selamat Datang",
+                          textScaleFactor: 2,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: HexColor("304D30"),
+                          ),
+                        ),
+                      ),
                       color: HexColor("304D30"),
                     ),
-                  ),
-                ),
-                color: HexColor("304D30"),
-              ),
-              Title(
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      clickCount = 0;
-                    });
-                  },
-                  child: Text(
-                    "Silahkan Login Untuk Mengakses YesHealth",
-                    textScaleFactor: 1.2,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                    Title(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            clickCount = 0;
+                          });
+                        },
+                        child: Text(
+                          "Silahkan Login Untuk Mengakses YesHealth",
+                          textScaleFactor: 1.2,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: HexColor("739072"),
+                          ),
+                        ),
+                      ),
                       color: HexColor("739072"),
                     ),
-                  ),
-                ),
-                color: HexColor("739072"),
-              ),
-              if (_errorMessage != null) ...[
-                SizedBox(height: 15.0),
-                Text(
-                  _errorMessage!,
-                  style: TextStyle(color: Colors.red),
-                ),
-              ],
-              SizedBox(height: 16.0),
-              Container(
-                width: 300,
-                child: TextField(
-                  controller: _usernameController,
-                  decoration: InputDecoration(
-                    labelText: 'Username',
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: HexColor("1E5128")),
+                    if (_errorMessage != null) ...[
+                      SizedBox(height: 15.0),
+                      Text(
+                        _errorMessage!,
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ],
+                    SizedBox(height: 16.0),
+                    Container(
+                      width: 300,
+                      child: TextField(
+                        controller: _usernameController,
+                        decoration: InputDecoration(
+                          labelText: 'Username',
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: HexColor("1E5128")),
+                          ),
+                          labelStyle: TextStyle(color: HexColor("1E5128")),
+                        ),
+                      ),
                     ),
-                    labelStyle: TextStyle(color: HexColor("1E5128")),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10.0),
-              Container(
-                width: 300,
-                child: TextField(
-                  obscureText: true,
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: HexColor("304D30")),
+                    SizedBox(height: 10.0),
+                    Container(
+                      width: 300,
+                      child: TextField(
+                        obscureText: true,
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: HexColor("304D30")),
+                          ),
+                          labelStyle: TextStyle(color: HexColor("304D30")),
+                        ),
+                      ),
                     ),
-                    labelStyle: TextStyle(color: HexColor("304D30")),
-                  ),
+                    SizedBox(height: 24.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        _login(context);
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            HexColor("#004225")),
+                        minimumSize:
+                            MaterialStateProperty.all<Size>(Size(200, 50)),
+                      ),
+                      child:
+                          Text('Masuk', style: TextStyle(color: Colors.white)),
+                    ),
+                    SizedBox(height: 16.0),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegistrationPage()),
+                        );
+                      },
+                      child: Text('Belum Mempunyai Akun? Daftar.',
+                          style: TextStyle(color: HexColor("4F6F52"))),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 24.0),
-              ElevatedButton(
-                onPressed: () {
-                  _login(context);
-                },
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(HexColor("#004225")),
-                  minimumSize: MaterialStateProperty.all<Size>(Size(200, 50)),
-                ),
-                child: Text('Masuk', style: TextStyle(color: Colors.white)),
-              ),
-              SizedBox(height: 16.0),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegistrationPage()),
-                  );
-                },
-                child: Text('Belum Mempunyai Akun? Daftar.',
-                    style: TextStyle(color: HexColor("4F6F52"))),
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

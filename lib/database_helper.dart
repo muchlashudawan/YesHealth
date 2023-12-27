@@ -208,3 +208,74 @@ class ManagerDatabaseHelper extends DatabaseHelper {
     }
   }
 }
+
+class ItemDatabaseHelper {
+  static final ItemDatabaseHelper _instance = ItemDatabaseHelper._internal();
+
+  factory ItemDatabaseHelper() {
+    return _instance;
+  }
+
+  ItemDatabaseHelper._internal();
+
+  late Database _database;
+
+  Future<Database> get database async {
+    _database = await initDatabase();
+    return _database;
+  }
+
+  Future<Database> initDatabase() async {
+    if (Platform.isWindows || Platform.isLinux) {
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
+    }
+
+    final path = join(await getDatabasesPath(), 'items_database.db');
+
+    return openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) async {
+        await db.execute('''
+         CREATE TABLE items(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            type TEXT,
+            price INTEGER
+          )
+        ''');
+      },
+    );
+  }
+
+  Future<int> addItem(Item item) async {
+    final db = await database;
+    return db.insert('items', item.toMap());
+  }
+
+  Future<int> updateItem(Item item) async {
+    final db = await database;
+    return db.update('items', item.toMap(),
+        where: 'id = ?', whereArgs: [item.id]);
+  }
+
+  Future<int> deleteItem(int itemId) async {
+    final db = await database;
+    return db.delete('items', where: 'id = ?', whereArgs: [itemId]);
+  }
+
+  Future<List<Item>> getItems() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query('items');
+
+    return List.generate(maps.length, (i) {
+      return Item(
+        id: maps[i]['id'],
+        name: maps[i]['name'],
+        type: maps[i]['type'],
+        price: maps[i]['price'],
+      );
+    });
+  }
+}
