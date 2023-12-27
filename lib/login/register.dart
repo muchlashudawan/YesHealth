@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:hexcolor/hexcolor.dart';
-import './redirect_register.dart';
-import '../database_helper.dart';
-import '../user_model.dart';
+import 'redirectRegisterAccount.dart';
+import '../databaseHelper.dart';
+import '../usersAndItemsModel.dart';
 
 const List<String> genderList = <String>['Laki-Laki', 'Perempuan'];
 

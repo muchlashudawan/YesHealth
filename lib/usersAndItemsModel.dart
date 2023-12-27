@@ -110,8 +110,10 @@ class Item {
   String name;
   String type;
   int price;
+  bool isSelected;
+  String? imagePath;
 
-  Item({this.id, required this.name, required this.type, required this.price});
+  Item({this.id, required this.name, required this.type, required this.price, this.isSelected = false, required this.imagePath});
 
   Map<String, dynamic> toMap() {
     return {
@@ -119,6 +121,27 @@ class Item {
       'name': name,
       'type': type,
       'price': price,
+      'imagePath': imagePath,
     };
+  }
+}
+
+class BannerModel {
+  final String filename;
+
+  BannerModel({
+    required this.filename,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'filename': filename,
+    };
+  }
+
+  factory BannerModel.fromMap(Map<String, dynamic> map) {
+    return BannerModel(
+      filename: map['filename'],
+    );
   }
 }

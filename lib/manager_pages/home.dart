@@ -2,13 +2,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../user_model.dart';
-import '../database_helper.dart';
+import 'package:hexcolor/hexcolor.dart';
+
+import '../usersAndItemsModel.dart';
+import '../databaseHelper.dart';
 import '../login/login.dart';
-import './addItem.dart';
-import './editItem.dart';
-import './deleteItem.dart';
-import './viewItem.dart';
+import 'itemAdd.dart';
+import 'itemEdit.dart';
+import 'itemDelete.dart';
+import 'itemView.dart';
+import 'changeBanner.dart';
 
 class HomeManagerPage extends StatefulWidget {
   @override
@@ -61,22 +64,50 @@ class _HomeManagerPageState extends State<HomeManagerPage> {
     var userData = Provider.of<UserData>(context, listen: false);
     UserBase? loggedInUserBase = userData.loggedInUser;
 
+    Future<void> _showLogoutConfirmation(BuildContext context) async {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Konfirmasi Logout'),
+            content: Text('Apakah Anda yakin ingin keluar?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text('Batal'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                  userData.logout();
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
+                child: Text('Ya', style: TextStyle(color: Colors.red)
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     if (loggedInUserBase != null) {
       UserManager user = loggedInUserBase as UserManager; // Use type cast
       return Scaffold(
         appBar: AppBar(
-          title: Text('Manager Panel'),
+          title: Text('YesHealth Manager Panel'),
           backgroundColor: Colors.black,
           actions: [
             IconButton(
               icon: Icon(Icons.logout),
               onPressed: () {
-                userData.logout();
-                Navigator.popUntil(context, (route) => route.isFirst);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
+                _showLogoutConfirmation(context);
               },
             ),
           ],
@@ -91,14 +122,14 @@ class _HomeManagerPageState extends State<HomeManagerPage> {
                 Text(
                   getGreeting() + ",",
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 30.0,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   user.username,
                   style: TextStyle(
-                    fontSize: 30.0,
+                    fontSize: 40.0,
                     fontWeight: FontWeight.bold,
                     foreground: Paint()
                       ..shader = LinearGradient(
@@ -113,7 +144,14 @@ class _HomeManagerPageState extends State<HomeManagerPage> {
                   onPressed: () {
                     _showBottomSheet(context);
                   },
-                  child: Text('Menu'),
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.black),
+                    minimumSize: MaterialStateProperty.all<Size>(
+                        Size(200, 50)), // Adjust the size as needed
+                  ),
+                  child: Text('Tampilkan Menu',
+                      style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -146,7 +184,7 @@ void _showBottomSheet(BuildContext context) {
           children: [
             _buildBottomSheetButton(
               icon: Icons.add,
-              label: 'Tambah Item',
+              label: 'Tambah Obat',
               onPressed: () {
                 Navigator.push(
                   context,
@@ -156,7 +194,7 @@ void _showBottomSheet(BuildContext context) {
             ),
             _buildBottomSheetButton(
               icon: Icons.visibility,
-              label: 'Lihat Item',
+              label: 'Lihat Obat',
               onPressed: () {
                 Navigator.push(
                   context,
@@ -166,7 +204,7 @@ void _showBottomSheet(BuildContext context) {
             ),
             _buildBottomSheetButton(
               icon: Icons.edit,
-              label: 'Ubah Item',
+              label: 'Ubah Obat',
               onPressed: () {
                 Navigator.push(
                   context,
@@ -176,11 +214,21 @@ void _showBottomSheet(BuildContext context) {
             ),
             _buildBottomSheetButton(
               icon: Icons.delete,
-              label: 'Hapus Item',
+              label: 'Hapus Obat',
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => DeleteItemPage()),
+                );
+              },
+            ),
+            _buildBottomSheetButton(
+              icon: Icons.filter_frames,
+              label: 'Ubah Banner',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChangeBannerPage()),
                 );
               },
             ),
@@ -201,37 +249,4 @@ Widget _buildBottomSheetButton({
     leading: Icon(icon),
     title: Text(label),
   );
-}
-
-void _editItem() async {
-  print("Edited Item");
-
-  // Show a dialog or navigate to a page to collect item details
-  // Create an updated Item object with the collected details
-  Item updatedItem = Item(id: 1, name: 'Updated Item', type: 'Type', price: 10);
-
-  // Update the item in the database
-  await ItemDatabaseHelper().updateItem(updatedItem);
-
-  // Refresh the UI or show a success message
-}
-
-void _deleteItem() async {
-  print("Deleted Item");
-
-  int itemIdToDelete = 1; // Replace with the actual item ID
-  await ItemDatabaseHelper().deleteItem(itemIdToDelete);
-
-  // Refresh the UI or show a success message
-}
-
-void _viewItem() async {
-  print("Viewing Items");
-
-  List<Item> items = await ItemDatabaseHelper().getItems();
-
-  // Display items in a list or grid
-  for (var item in items) {
-    print('Item: ${item.name}, Type: ${item.type}, Price: ${item.price}');
-  }
 }

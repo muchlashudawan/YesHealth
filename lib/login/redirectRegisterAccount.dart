@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../user_model.dart';
+import '../usersAndItemsModel.dart';
 
 class RedirectRegisterPage extends StatelessWidget {
   final String status;

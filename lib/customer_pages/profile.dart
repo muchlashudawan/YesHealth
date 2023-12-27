@@ -2,7 +2,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-import '../user_model.dart';
+import '../usersAndItemsModel.dart';
 import '../login/login.dart';
 
 class Profile extends StatelessWidget {

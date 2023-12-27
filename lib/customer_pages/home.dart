@@ -1,6 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+
+import '../databaseHelper.dart';
+import '../usersAndItemsModel.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,6 +13,22 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _searchQuery = "";
+  String? _bannerImagePath;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBanner();
+  }
+
+  Future<void> _loadBanner() async {
+    final banners = await BannerDatabaseHelper().getBanners();
+    setState(() {
+      if (banners.isNotEmpty) {
+        _bannerImagePath = banners.first.filename;
+      }
+    });
+  }
 
   Future<String> loadAsset() async {
     return await rootBundle.loadString('assets/obat.json');
@@ -49,19 +69,54 @@ class _HomePageState extends State<HomePage> {
                 child: Container(
                   height: 170,
                   margin: EdgeInsets.all(10),
-                  child: PageView.builder(
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        width: 120,
-                        decoration: BoxDecoration(
-                          color: _getBannerColor(index),
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: _bannerImagePath != null
+                      ? Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            image: DecorationImage(
+                              image: FileImage(File(_bannerImagePath!)),
+                              fit: BoxFit
+                                  .fill, // Ensure the image covers the entire container
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black
+                                    .withOpacity(0.4), // Light black shadow
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                            border: Border.all(
+                              color: Colors.black
+                                  .withOpacity(0.1), // Light black outline
+                              width: 1,
+                            ),
+                          ),
+                        )
+                      : PageView.builder(
+                          itemCount: 3,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              width: 120,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black
+                                        .withOpacity(0.4), // Light black shadow
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              // Add the content of each banner here
+                            );
+                          },
                         ),
-                        // Add the content of each banner here
-                      );
-                    },
-                  ),
                 ),
               ),
 
@@ -82,8 +137,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.search),
-                    SizedBox(width: 10),
+                    SizedBox(width:14), // Increase the width to move the search icon to the right
                     Expanded(
                       child: TextField(
                         onChanged: (value) {

@@ -1,9 +1,9 @@
 // registration_page.dart
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import './redirect_register.dart';
-import '../database_helper.dart';
-import '../user_model.dart';
+import 'redirectRegisterAccount.dart';
+import '../databaseHelper.dart';
+import '../usersAndItemsModel.dart';
 
 class RegistrationManagerPage extends StatefulWidget {
   @override

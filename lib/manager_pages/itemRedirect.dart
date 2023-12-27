@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import '../user_model.dart';
 
-class RedirectRegisterPage extends StatelessWidget {
+class ItemRedirectPage extends StatelessWidget {
   final String status;
-  final UserManager user;
+  final String title;
 
-  RedirectRegisterPage({required this.status, required this.user});
+  ItemRedirectPage({required this.status, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -18,22 +17,20 @@ class RedirectRegisterPage extends StatelessWidget {
                 ? Icon(Icons.check_circle, color: Colors.green, size: 100)
                 : Icon(Icons.error, color: Colors.red, size: 100),
             Text(
-              status == "success"
-                  ? "Registrasi Akun Sukses"
-                  : "Registrasi Akun Gagal",
-              style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+              title,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Text(
-              "Klik tombol di bawah ini untuk kembali ke halaman login",
+              "Klik tombol di bawah ini untuk kembali ke halaman sebelumnya",
               style: TextStyle(fontSize: 16),
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                // Navigate back to login page
+                // Navigate back to the previous page
                 Navigator.pop(context);
               },
-              child: Text("Return to Login"),
+              child: Text("Kembali"),
             ),
           ],
         ),
