@@ -1,9 +1,8 @@
+// Add these imports if not already present
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:window_size/window_size.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io';
-import 'package:hexcolor/hexcolor.dart';
 
 import 'customer_pages/home.dart';
 import 'customer_pages/cart.dart';
@@ -11,8 +10,8 @@ import 'customer_pages/profile.dart';
 import 'login/login.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows) {
-    WidgetsFlutterBinding.ensureInitialized();
     setWindowMaxSize(const Size(1024, 768));
     setWindowMinSize(const Size(512, 384));
     Future<Null>.delayed(Duration(seconds: 1), () {
@@ -20,7 +19,6 @@ void main() {
           Rect.fromCenter(center: Offset(1000, 500), width: 600, height: 1000));
     });
   }
-
   runApp(MyApp());
 }
 
@@ -30,7 +28,6 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => UserData(),
       child: MaterialApp(
-        theme: ThemeData(primarySwatch: Colors.green),
         debugShowCheckedModeBanner: false,
         home: Consumer<UserData>(
           builder: (context, userData, _) {
@@ -75,13 +72,12 @@ class _MyAppState extends State<MyMainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.green),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(60.0),
+          preferredSize: Size.fromHeight(60.0), // Adjust the height as needed
           child: AppBar(
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.lightBlue,
             elevation: 0.0,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,51 +89,105 @@ class _MyAppState extends State<MyMainApp> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Icon(Icons.notifications_sharp),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.favorite),
+                      onPressed: () {
+                        // Handle click on heart icon
+                        print("Heart icon clicked");
+                        // Open bottom sheet
+                        _showBottomSheet(context, Wishlist());
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.notifications_sharp),
+                      onPressed: () {
+                        // Handle click on notification icon
+                        print("Notification icon clicked");
+                        // Open bottom sheet
+                        _showBottomSheet(context, NotificationPage());
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
         ),
-        body: Stack(
-          children: [
-            PageView(
-              controller: _pageController,
-              children: _pages,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
+        body: PageView(
+          controller: _pageController,
+          children: _pages,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart_rounded),
+              label: "Cart",
             ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: BottomNavigationBar(
-                items: const <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.shopping_cart_rounded),
-                    label: "Cart",
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
-                    label: "Home",
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
-                    label: "Profile",
-                  ),
-                ],
-                currentIndex: _currentIndex,
-                selectedItemColor: HexColor("86A789"),
-                backgroundColor: const Color.fromARGB(216, 255, 255, 255),
-                onTap: onItemTapped,  
-              ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Profile",
             ),
           ],
+          currentIndex: _currentIndex,
+          selectedItemColor: Colors.lightBlue,
+          backgroundColor: Color.fromARGB(255, 236, 236, 236),
+          onTap: onItemTapped,
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      ),
+    );
+  }
+
+  // Function to show the bottom sheet
+  void _showBottomSheet(BuildContext context, Widget page) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          child: page, // Replace with your desired page widget
+        );
+      },
+    );
+  }
+}
+
+class Wishlist extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Wishlist'),
+      ),
+      body: Center(
+        child: Text('Content of the Wishlist goes here...'),
       ),
     );
   }
 }
+
+class NotificationPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Notification Page'),
+      ),
+      body: Center(
+        child: Text('Content of the Notification Page goes here...'),
+      ),
+    );
+  }
+}
+
+// Rest of the code remains the same

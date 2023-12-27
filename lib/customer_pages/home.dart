@@ -1,9 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String _searchQuery = "";
+
   Future<String> loadAsset() async {
     return await rootBundle.loadString('assets/obat.json');
   }
@@ -20,8 +26,8 @@ class HomePage extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.green,
-                Colors.green.withOpacity(0.0), // Fade to transparent
+                Colors.lightBlue,
+                Colors.lightBlue.withOpacity(0.0), // Fade to transparent
               ],
             ),
             borderRadius: BorderRadius.only(
@@ -80,8 +86,13 @@ class HomePage extends StatelessWidget {
                     SizedBox(width: 10),
                     Expanded(
                       child: TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            _searchQuery = value.toLowerCase();
+                          });
+                        },
                         decoration: InputDecoration(
-                          hintText: "Search for Drugs... lol.",
+                          hintText: "Search for Drugs...",
                           border: InputBorder.none,
                         ),
                       ),
@@ -111,7 +122,8 @@ class HomePage extends StatelessWidget {
 
                               // Category name
                               Padding(
-                                padding: const EdgeInsets.only(left: 15, top: 5),
+                                padding:
+                                    const EdgeInsets.only(left: 15, top: 5),
                                 child: Text(
                                   category,
                                   style: TextStyle(
@@ -132,73 +144,82 @@ class HomePage extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       for (var obat in obatData[category])
-                                        Container(
-                                          width: 150,
-                                          margin: EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.5),
-                                                spreadRadius: 2,
-                                                blurRadius: 5,
-                                                offset: Offset(0, 3),
-                                              ),
-                                            ],
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              // Image
-                                              Container(
-                                                height: 120,
-                                                width: double.infinity,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.vertical(
-                                                          top: Radius.circular(
-                                                              10)),
-                                                  image: DecorationImage(
-                                                    image: AssetImage(
-                                                        'assets/test_image.png'), // Update the image path
-                                                    fit: BoxFit.cover,
+                                        // Add a filter based on the search query
+                                        if (obat['nama']
+                                            .toLowerCase()
+                                            .contains(_searchQuery))
+                                          Container(
+                                            width: 150,
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.5),
+                                                  spreadRadius: 2,
+                                                  blurRadius: 5,
+                                                  offset: Offset(0, 3),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                // Image
+                                                Container(
+                                                  height: 120,
+                                                  width: double.infinity,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                            top:
+                                                                Radius.circular(
+                                                                    10)),
+                                                    image: DecorationImage(
+                                                      image: AssetImage(
+                                                          'assets/test_image.png'), // Update the image path
+                                                      fit: BoxFit.cover,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
 
-                                              // Add spacing
-                                              SizedBox(height: 10),
+                                                // Add spacing
+                                                SizedBox(height: 10),
 
-                                              // Name
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                left: 10),
-                                                child: Text(
-                                                  obat['nama'].toString().capitalize(),
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                                // Name
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10),
+                                                  child: Text(
+                                                    obat['nama']
+                                                        .toString()
+                                                        .capitalize(),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
                                                 ),
-                                              ),
 
-                                              // Add spacing
-                                              SizedBox(height: 5),
+                                                // Add spacing
+                                                SizedBox(height: 5),
 
-                                              // Price
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10),
-                                                child: Text(
-                                                    'Rp. ${obat['harga']}'),
-                                              ),
-                                            ],
+                                                // Price
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10),
+                                                  child: Text(
+                                                      'Rp. ${obat['harga']}'),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
                                     ],
                                   ),
                                 ),
@@ -218,19 +239,19 @@ class HomePage extends StatelessWidget {
       ],
     );
   }
-}
 
-// Function to get banner colors based on index
-Color _getBannerColor(int index) {
-  switch (index) {
-    case 0:
-      return Colors.blue;
-    case 1:
-      return Colors.green;
-    case 2:
-      return Colors.orange;
-    default:
-      return Colors.green; // Default color
+  // Function to get banner colors based on index
+  Color _getBannerColor(int index) {
+    switch (index) {
+      case 0:
+        return Colors.blue;
+      case 1:
+        return Colors.green;
+      case 2:
+        return Colors.orange;
+      default:
+        return Colors.green; // Default color
+    }
   }
 }
 
