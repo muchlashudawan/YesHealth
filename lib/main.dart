@@ -19,7 +19,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows) {
     setWindowMaxSize(const Size(1024, 768));
-    //setWindowMinSize(const Size(512, 384));
+    setWindowMinSize(const Size(512, 384));
     Future<Null>.delayed(Duration(seconds: 1), () {
       setWindowFrame(
           Rect.fromCenter(center: Offset(1000, 500), width: 600, height: 1000));
