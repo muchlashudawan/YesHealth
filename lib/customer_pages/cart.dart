@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'dart:io';
+import 'dart:math';
 import '../databaseHelper.dart';
 import '../usersAndItemsModel.dart';
 
@@ -30,7 +33,7 @@ class _CartMenuState extends State<CartMenu> {
           name: item['itemName'],
           quantity: item['quantity'],
           price: item['price'],
-          isSelected: item['isSelected'] == 1,
+          isSelected: true, // Set isSelected to true
           imagePath: item['imagePath'],
         );
       }).toList();
@@ -39,10 +42,12 @@ class _CartMenuState extends State<CartMenu> {
 
   @override
   Widget build(BuildContext context) {
+    NumberFormat numberFormat = NumberFormat.decimalPattern('id');
+
     return Scaffold(
       body: cartItems.isEmpty
           ? Center(
-              child: Text("Your cart is empty."),
+              child: Text("Keranjang Anda Kosong."),
             )
           : Column(
               children: [
@@ -50,25 +55,74 @@ class _CartMenuState extends State<CartMenu> {
                   child: ListView.builder(
                     itemCount: cartItems.length,
                     itemBuilder: (context, index) {
-                      return Card(
-                        elevation: 4,
-                        margin: EdgeInsets.all(8),
-                        child: ListTile(
-                          title: Text(cartItems[index].name),
-                          leading: Checkbox(
-                            value: cartItems[index].isSelected,
-                            onChanged: (value) {
-                              setState(() {
-                                cartItems[index].isSelected = value!;
-                              });
-                              _updateCart(cartItems[index]);
-                            },
+                      return Dismissible(
+                        key: UniqueKey(),
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 16.0),
+                            child: Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
                           ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () {
-                              _removeFromCart(cartItems[index]);
-                            },
+                        ),
+                        onDismissed: (direction) {
+                          _removeFromCart(cartItems[index]);
+                        },
+                        child: Card(
+                          elevation: 4,
+                          margin: EdgeInsets.all(8),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Item name and type (top left)
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Item name (left top bold)
+                                      Text(
+                                        cartItems[index].name,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      // Quantity (bottom left)
+                                      Text(
+                                        'Kuantitas: x${numberFormat.format(cartItems[index].quantity)}',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      // Total price (bottom left)
+                                      Text(
+                                        'Total: Rp ${numberFormat.format(cartItems[index].quantity * cartItems[index].price)}',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // Item image on the right
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: Image.file(
+                                    File(cartItems[index].imagePath!),
+                                    height: 80,
+                                    width: 80,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -81,7 +135,26 @@ class _CartMenuState extends State<CartMenu> {
                     onPressed: () {
                       _checkout();
                     },
-                    child: Text("Buy"),
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.blue),
+                      padding: MaterialStateProperty.all(EdgeInsets.all(16)),
+                      minimumSize:
+                          MaterialStateProperty.all<Size>(Size(200, 50)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.shopping_cart,
+                            color: Colors.white), // Add cart icon
+                        SizedBox(
+                            width: 8), // Add some space between icon and text
+                        Text(
+                          'Check Out',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -101,51 +174,134 @@ class _CartMenuState extends State<CartMenu> {
   }
 
   void _checkout() async {
-    // Get selected items and remove them from the cart
-    List<CartItem> selectedItems =
-        cartItems.where((item) => item.isSelected).toList();
+  NumberFormat numberFormat = NumberFormat.decimalPattern('id');
 
-    // This is just a placeholder, you can replace it with your actual buy logic
-    if (selectedItems.isNotEmpty) {
-      await UserHomeDatabaseHelper().removeSelectedItems(widget.user.id);
-      _loadCart();
+  // Get selected items and remove them from the cart
+  List<CartItem> selectedItems =
+      cartItems.where((item) => item.isSelected).toList();
 
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Purchase Completed."),
-            content: Text(
-                "Thank you for your purchase of ${selectedItems.length} items."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("No items selected."),
-            content: Text("Please select items to purchase."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
+  if (selectedItems.isNotEmpty) {
+    double totalPriceAllItem = 0;
+
+    // Calculate total price of all selected items
+    for (var item in selectedItems) {
+      totalPriceAllItem += item.quantity * item.price;
     }
+
+    // Build the item list string for the confirmation dialog
+    String itemList = "";
+    for (var item in selectedItems) {
+      itemList +=
+          "${item.name}\n${numberFormat.format(item.quantity)} x ${numberFormat.format(item.price)} = Rp. ${numberFormat.format(item.quantity * item.price)}\n\n";
+    }
+
+    bool confirm = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Konfirmasi Pembelian"),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(itemList),
+              Text(
+                "Semua Obat Ini Bernilai Rp. ${numberFormat.format(totalPriceAllItem)}."),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // "Batal"
+              },
+              child: Text("Batal"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // "Gas, Bayar!"
+              },
+              child: Text("Gas, Bayar!"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return FutureBuilder(
+            future: Future.delayed(
+              Duration(seconds: Random().nextInt(6) + 5), // Simulate 5-10 seconds delay
+              () => "success",
+            ),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return AlertDialog(
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.green, size: 64),
+                      SizedBox(height: 16),
+                      Text(
+                          "Kamu Berhasil Membeli ${numberFormat.format(selectedItems.length)} Obat."),
+                      Text("Terimakasih telah berbelanja di YesHealth!"),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("OK"),
+                    ),
+                  ],
+                );
+              } else {
+                return AlertDialog(
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 16),
+                      Text("Sedang Melakukan Pembayaran", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text("Mohon Tunggu Sebentar", style: TextStyle(fontWeight: FontWeight.normal)),
+                    ],
+                  ),
+                );
+              }
+            },
+          );
+        },
+      );
+
+      // Remove items from the cart
+      for (var item in selectedItems) {
+        await UserHomeDatabaseHelper()
+            .removeFromCart(widget.user.id, item.id!);
+      }
+      _loadCart();
+    }
+  } else {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("No items selected."),
+          content: Text("Please select items to purchase."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
   }
+}
 }

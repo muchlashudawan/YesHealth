@@ -23,6 +23,7 @@ class DatabaseHelper {
 
   Future<Database> initDatabase() async {
     if (Platform.isWindows || Platform.isLinux) {
+      databaseFactoryOrNull = null;
       sqfliteFfiInit();
       databaseFactory = databaseFactoryFfi;
     }
@@ -125,6 +126,7 @@ class ManagerDatabaseHelper extends DatabaseHelper {
   @override
   Future<Database> initDatabase() async {
     if (Platform.isWindows || Platform.isLinux) {
+      databaseFactoryOrNull = null;
       sqfliteFfiInit();
       databaseFactory = databaseFactoryFfi;
     }
@@ -227,6 +229,7 @@ class ItemDatabaseHelper {
 
   Future<Database> initDatabase() async {
     if (Platform.isWindows || Platform.isLinux) {
+      databaseFactoryOrNull = null;
       sqfliteFfiInit();
       databaseFactory = databaseFactoryFfi;
     }
@@ -243,6 +246,7 @@ class ItemDatabaseHelper {
             name TEXT,
             type TEXT,
             price INTEGER,
+            quantity INTEGER,
             imagePath TEXT
           )
         ''');
@@ -251,22 +255,47 @@ class ItemDatabaseHelper {
   }
 
   Future<int> addItem(Item item) async {
-    final db = await database;
-    return db.insert('items', item.toMap());
+    try {
+      final db = await database;
+
+      // Check if an item with the same name and type already exists
+      List<Map<String, dynamic>> existingItems = await db.query(
+        'items',
+        where: 'name = ? AND type = ?',
+        whereArgs: [item.name, item.type],
+      );
+
+      if (existingItems.isNotEmpty) {
+        // If exists, update the quantity instead of adding a new one
+        int newQuantity = existingItems[0]['quantity'] + item.quantity;
+        item = item.copyWith(quantity: newQuantity, id: existingItems[0]['id']);
+        return await updateItem(item);
+      } else {
+        // If doesn't exist, insert a new item
+        return await db.insert('items', item.toMap());
+      }
+    } catch (e) {
+      print('Error adding item: $e');
+      rethrow; // Rethrow the error to propagate it to the calling code
+    }
   }
 
   Future<int> updateItem(Item item) async {
     try {
       final db = await database;
+
+      // Use copyWith to create a new Item with updated quantity
+      Item updatedItem = item.copyWith();
+
       return await db.update(
         'items',
-        item.toMap(),
+        updatedItem.toMap(),
         where: 'id = ?',
-        whereArgs: [item.id],
+        whereArgs: [updatedItem.id],
       );
     } catch (e) {
       print('Error updating item: $e');
-      rethrow; // Rethrow the error to propagate it to the calling code
+      rethrow;
     }
   }
 
@@ -291,6 +320,7 @@ class ItemDatabaseHelper {
           name: maps[i]['name'],
           type: maps[i]['type'],
           price: maps[i]['price'],
+          quantity: maps[i]['quantity'],
           imagePath: maps[i]['imagePath'],
         );
       });
@@ -313,6 +343,7 @@ class ItemDatabaseHelper {
           name: map['name'],
           type: map['type'],
           price: map['price'],
+          quantity: map['quantity'],
           imagePath: map['imagePath'],
         );
 
@@ -348,9 +379,77 @@ class ItemDatabaseHelper {
       rethrow; // Rethrow the error to propagate it to the calling code
     }
   }
+
+  Future<void> updateItemQuantity(
+      String itemName, int quantityChange, String actionType) async {
+    try {
+      // Fetch the existing item from the database based on the item name
+      Item existingItem = await getItemByName(itemName);
+
+      // Calculate the new quantity based on the action type
+      int newQuantity;
+      if (actionType == "return") {
+        // For return, increase the quantity
+        newQuantity = existingItem.quantity + quantityChange;
+      } else if (actionType == "take") {
+        // For take, decrease the quantity
+        newQuantity = existingItem.quantity - quantityChange;
+      } else {
+        // Handle unsupported action type
+        throw ArgumentError("Unsupported action type: $actionType");
+      }
+
+      print(
+          "New Quantity: ${newQuantity} (${actionType}, ${existingItem.quantity} and ${quantityChange})");
+
+      print("Final Quantity: ${newQuantity}");
+
+      // Update the item quantity in the app database
+      await updateItem(
+        Item(
+          id: existingItem.id,
+          name: itemName,
+          type: existingItem.type,
+          quantity: newQuantity,
+          price: existingItem.price,
+          imagePath: existingItem.imagePath,
+        ),
+      );
+    } catch (e) {
+      print('Error updating item quantity: $e');
+    }
+
+    print("\n");
+  }
+
+  Future<Item> getItemByName(String itemName) async {
+    try {
+      final db = await database;
+      final List<Map<String, dynamic>> maps = await db.query(
+        'items',
+        where: 'name = ?',
+        whereArgs: [itemName],
+      );
+
+      if (maps.isNotEmpty) {
+        return Item(
+          id: maps.first['id'],
+          name: maps.first['name'],
+          type: maps.first['type'],
+          price: maps.first['price'],
+          quantity: maps.first['quantity'],
+          imagePath: maps.first['imagePath'],
+        );
+      } else {
+        throw Exception('Item not found.');
+      }
+    } catch (e) {
+      print('Error getting item by name: $e');
+      rethrow;
+    }
+  }
 }
 
-// databaseHelper.dart
 class UserHomeDatabaseHelper {
   static final UserHomeDatabaseHelper _instance =
       UserHomeDatabaseHelper._internal();
@@ -370,6 +469,7 @@ class UserHomeDatabaseHelper {
 
   Future<Database> initDatabase() async {
     if (Platform.isWindows || Platform.isLinux) {
+      databaseFactoryOrNull = null;
       sqfliteFfiInit();
       databaseFactory = databaseFactoryFfi;
     }
@@ -403,6 +503,7 @@ class UserHomeDatabaseHelper {
             userId INTEGER,
             itemName TEXT,
             quantity INTEGER,
+            isSelected BOOLEAN,
             price INTEGER,
             imagePath TEXT
           )
@@ -434,17 +535,6 @@ class UserHomeDatabaseHelper {
     );
   }
 
-  Future<void> removeFromCart(int userId, int cartItemId) async {
-    print("Remove From Cart Executed!");
-
-    final db = await database;
-    await db.delete(
-      'user_cart',
-      where: 'userId = ? AND id = ?',
-      whereArgs: [userId, cartItemId],
-    );
-  }
-
   Future<int> addToWishlist(
       int userId, String itemName, String imagePath) async {
     final db = await database;
@@ -457,18 +547,103 @@ class UserHomeDatabaseHelper {
     return db.insert('notifications', {'userId': userId, 'message': message});
   }
 
-  Future<int> addToCart(int userId, String itemName, int quantity, int price,
+  Future<void> addToCart(int userId, String itemName, int quantity, int price,
       String imagePath) async {
-      print("Add to Cart Executed!");
+    try {
+      // Check if the item is already in the cart
+      CartItem existingCartItem = await getCartItem(userId, itemName);
 
+      if (existingCartItem.id != null) {
+        // If the item is already in the cart, update the quantity
+        await updateCartItem(
+          CartItem(
+            id: existingCartItem.id,
+            name: itemName,
+            quantity: existingCartItem.quantity + quantity,
+            price: price,
+            imagePath: imagePath,
+          ),
+        );
+      } else {
+        // If the item is not in the cart, add it to the cart
+        await _addToCartDatabase(userId, itemName, quantity, price, imagePath);
+      }
+    } catch (e) {
+      print('Error adding to cart: $e');
+    }
+  }
+
+  Future<void> removeFromCart(int userId, int cartItemId) async {
+    try {
+      // Get the cart item details before removing it
+      CartItem cartItem = await getCartItemById(userId, cartItemId);
+
+      // Remove the item from the cart
+      await _removeFromCartDatabase(userId, cartItemId);
+    } catch (e) {
+      print('Error removing from cart: $e');
+    }
+  }
+
+  Future<void> _addToCartDatabase(int userId, String itemName, int quantity,
+      int price, String imagePath) async {
     final db = await database;
-    return db.insert('user_cart', {
+    await db.insert('user_cart', {
       'userId': userId,
       'itemName': itemName,
       'quantity': quantity,
       'price': price,
       'imagePath': imagePath
     });
+  }
+
+  Future<void> _removeFromCartDatabase(int userId, int cartItemId) async {
+    final db = await database;
+    await db.delete('user_cart',
+        where: 'userId = ? AND id = ?', whereArgs: [userId, cartItemId]);
+  }
+
+  Future<void> updateItemQuantity(
+      String itemName, int quantityChange, String type) async {
+    try {
+      // Update the item quantity using ItemDatabaseHelper
+      await ItemDatabaseHelper()
+          .updateItemQuantity(itemName, quantityChange, type);
+    } catch (e) {
+      print('Error updating item quantity: $e');
+    }
+  }
+
+  Future<CartItem> getCartItem(int userId, String itemName) async {
+    final db = await database;
+    List<Map<String, dynamic>> result = await db.query('user_cart',
+        where: 'userId = ? AND itemName = ?', whereArgs: [userId, itemName]);
+
+    if (result.isNotEmpty) {
+      return CartItem.fromMap(result.first);
+    } else {
+      return CartItem(
+        name: 'defaultName', // Provide a default name
+        quantity: 0, // Provide a default quantity
+        price: 0, // Provide a default price
+        // Add other required parameters with appropriate default values
+      );
+    }
+  }
+
+  Future<CartItem> getCartItemById(int userId, int cartItemId) async {
+    final db = await database;
+    List<Map<String, dynamic>> cartItems = await db.query(
+      "user_cart",
+      where: 'userId = ? AND id = ?',
+      whereArgs: [userId, cartItemId],
+    );
+
+    if (cartItems.isNotEmpty) {
+      return CartItem.fromMap(cartItems.first);
+    } else {
+      throw Exception('Cart item not found.');
+    }
   }
 
   Future<List<Map<String, dynamic>>> getWishlist(int userId) async {
@@ -482,7 +657,7 @@ class UserHomeDatabaseHelper {
   }
 
   Future<List<Map<String, dynamic>>> getCart(int userId) async {
-      print("Get Cart Executed!");
+    print("Get Cart Executed!");
 
     final db = await database;
     return db.query('user_cart', where: 'userId = ?', whereArgs: [userId]);
@@ -508,6 +683,7 @@ class BannerDatabaseHelper {
 
   Future<Database> initDatabase() async {
     if (Platform.isWindows || Platform.isLinux) {
+      databaseFactoryOrNull = null;
       sqfliteFfiInit();
       databaseFactory = databaseFactoryFfi;
     }

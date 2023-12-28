@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';   
 import 'dart:io';
 import '../databaseHelper.dart';
 import '../usersAndItemsModel.dart';
@@ -38,6 +39,8 @@ class _ViewItemPageState extends State<ViewItemPage> {
       );
     }
   }
+
+  NumberFormat numberFormat = NumberFormat.decimalPattern('id');
 
   @override
   void initState() {
@@ -79,7 +82,7 @@ class _ViewItemPageState extends State<ViewItemPage> {
                   SizedBox(height: 16.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                   children: (items != null && items!.isNotEmpty) ? items!.map((item) {
+                    children: (items != null && items!.isNotEmpty) ? items!.map((item) {
                       return GestureDetector(
                         onTap: () {
                           _showEditModal(context, item);
@@ -98,12 +101,12 @@ class _ViewItemPageState extends State<ViewItemPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('ID: ${item.id}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    Text('Nama  : ${item.name}'),
-                                    Text('Tipe     : ${item.type}'),
-                                    Text('Harga  : ${item.price}'),
+                                    Text('${item.name} ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                    SizedBox(height: 8.0),
+                                    Text('ID            : ${item.id}'),
+                                    Text('Tipe         : ${item.type}'),
+                                    Text('Kuantitas : ${numberFormat.format(item.quantity)}'),
+                                    Text('Harga      : Rp. ${numberFormat.format(item.price)}'),
                                   ],
                                 ),
                               ),

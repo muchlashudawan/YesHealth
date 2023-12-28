@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    
     User loggedInUser = Provider.of<UserData>(context).loggedInUser as User;
     return Scaffold(
       body: Stack(
@@ -205,42 +207,50 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildCategoryItems(
       String category, List<Item> items, User loggedInUser) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 8, bottom: 8),
-          child: Text(
-            category,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 8, bottom: 8),
+            child: Text(
+              category,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
-        ),
-        Container(
-          height: 200,
-          margin: EdgeInsets.only(bottom: 16),
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              Item item = items[index];
-              return _buildItemCard(item, loggedInUser);
-            },
+          Container(
+            // Remove the fixed height here
+            margin: EdgeInsets.only(bottom: 16),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: items.map((item) {
+                  return _buildItemCard(item, loggedInUser);
+                }).toList(),
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildItemCard(Item item, User loggedInUser) {
+    bool isStockAvailable = item.quantity > 0;
+    NumberFormat numberFormat = NumberFormat.decimalPattern('id');
+
     return GestureDetector(
       onTap: () {
-        _showItemDetailsBottomSheet(item, loggedInUser);
+        if (isStockAvailable) {
+          _showItemDetailsBottomSheet(item, loggedInUser);
+        }
       },
       child: Container(
         width: 150,
         margin: EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isStockAvailable ? Colors.white : Colors.grey.withOpacity(0.5),
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
@@ -270,31 +280,204 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Text(
                     item.name,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: isStockAvailable ? Colors.black : Colors.white,
+                    ),
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Rp. ${item.price.toString()}',
-                    style: TextStyle(fontSize: 14),
+                    'Rp. ${numberFormat.format(item.price)}',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: isStockAvailable ? Colors.black : Colors.white,
+                    ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 8),
           ],
         ),
       ),
     );
   }
 
-  void _addToCart(Item item, User loggedInUser) async {
+  void _showItemDetailsBottomSheet(Item item, User loggedInUser) {
+    int selectedQuantity = 0; // Default quantity
+    String? quantityError; // Error message for invalid quantity
+    NumberFormat numberFormat = NumberFormat.decimalPattern('id');
+
+    void addToCart() {
+      if (selectedQuantity.isNaN) {
+        setState(() {
+          quantityError = 'Jumlah yang dimasukkan harus berupa nomor.';
+        });
+      } else if (selectedQuantity > item.quantity) {
+        setState(() {
+          quantityError =
+              'Jumlah yang dimasukkan lebih dari Jumlah Stok Yang Ada. Anda Bisa Membeli Obat Ini Max Sebanyak ${item.quantity}.';
+        });
+      } else if (selectedQuantity > 0) {
+        Navigator.of(context).pop();
+        print("User Selected Quantity Is $selectedQuantity");
+        _addToCart(item, loggedInUser, selectedQuantity);
+      } else {
+        setState(() {
+          quantityError =
+              'Jumlah yang dimasukkan tidak valid. Harap masukkan jumlah yang lebih dari 0.';
+        });
+      }
+    }
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setStateModal) {
+            return SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 16,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Product image on the right-top side
+                        Text(
+                          item.name,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.file(
+                            File(item.imagePath!),
+                            height: 80,
+                            width: 80,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      item.quantity > 0
+                          ? 'Tersedia ${numberFormat.format(item.quantity)} Pack'
+                          : 'Obat Habis Terjual',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: item.quantity > 0 ? Colors.green : Colors.red),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Rp. ${numberFormat.format(item.price)} @ Pack',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(height: 16),
+                    // Error text for invalid quantity
+                    Visibility(
+                      visible: quantityError != null,
+                      child: Text(
+                        quantityError ?? '',
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Jumlah: ',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        // Input field for quantity with error text
+                        Container(
+                          width: 160,
+                          child: TextFormField(
+                            initialValue: selectedQuantity.toString(),
+                            keyboardType: TextInputType.number,
+                            onChanged: (value) {
+                              // Update selected quantity when the user types
+                              if (value.isEmpty) {
+                                selectedQuantity = 0;
+                              } else {
+                                int parsedValue = int.tryParse(value) ?? 0;
+                                selectedQuantity =
+                                    parsedValue < 0 ? 0 : parsedValue;
+                                // Clear error message if the input is valid
+                              }
+                              // Update the UI
+                              setStateModal(() {});
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    // Stretched "Tambah Ke Keranjang" button
+                    ElevatedButton(
+                      onPressed: () {
+                        if (selectedQuantity <= item.quantity) {
+                          addToCart();
+                        }
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            selectedQuantity > item.quantity ||
+                                    selectedQuantity <= 0
+                                ? Colors.grey
+                                : Colors.blue),
+                        padding: MaterialStateProperty.all(EdgeInsets.all(16)),
+                        minimumSize:
+                            MaterialStateProperty.all<Size>(Size(200, 50)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.shopping_cart,
+                              color: Colors.white), // Add cart icon
+                          SizedBox(
+                              width: 8), // Add some space between icon and text
+                          Text(
+                            'Tambah Ke Keranjang',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _addToCart(Item item, User loggedInUser, int quantity) async {
     try {
       // Check if the item is already in the cart
+      print("User ID: ${loggedInUser.id}");
       List<Map<String, dynamic>> cartItems =
           await UserHomeDatabaseHelper().getCart(loggedInUser.id);
 
-      bool itemExistsInCart = cartItems.any((cartItem) =>
-          cartItem['itemName'] == item.name && cartItem['isSelected'] == 0);
+      print("Cart Items: $cartItems");
+
+      bool itemExistsInCart = cartItems.any(
+        (cartItem) =>
+            cartItem['itemName'] == item.name &&
+            cartItem['isSelected'] == false,
+      );
 
       if (itemExistsInCart) {
         // If the item is already in the cart, update the quantity
@@ -304,19 +487,20 @@ class _HomePageState extends State<HomePage> {
             quantity: cartItems.firstWhere(
                   (cartItem) =>
                       cartItem['itemName'] == item.name &&
-                      cartItem['isSelected'] == 0,
+                      cartItem['isSelected'] == false,
                 )['quantity'] +
-                1,
+                quantity,
             price: item.price,
             imagePath: item.imagePath,
+            isSelected: true, // Set isSelected to true
           ),
         );
       } else {
-        // If the item is not in the cart, add it to the cart
+        // If the item is not in the cart, add it to the cart with isSelected set to true
         await UserHomeDatabaseHelper().addToCart(
           loggedInUser.id,
           item.name,
-          1, // Initial quantity
+          quantity,
           item.price,
           item.imagePath!,
         );
@@ -325,45 +509,18 @@ class _HomePageState extends State<HomePage> {
       // Show a snackbar to indicate successful addition to the cart
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${item.name} telah di tambahkan ke keranjang.'),
+          content:
+              Text('${quantity} ${item.name} telah ditambahkan ke keranjang.'),
           duration: Duration(seconds: 2),
         ),
       );
+      await ItemDatabaseHelper()
+          .updateItemQuantity(item.name, quantity, "take");
+
+      // Refresh the UI or call setState if necessary
+      setState(() {});
     } catch (e) {
       print('Error adding to cart: $e');
     }
-  }
-
-  void _showItemDetailsBottomSheet(Item item, User loggedInUser) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                item.name,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Rp. ${item.price.toString()}',
-                style: TextStyle(fontSize: 18),
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _addToCart(item, loggedInUser);
-                },
-                child: Text('Tambah Ke Keranjang'),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 }

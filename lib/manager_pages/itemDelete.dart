@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import '../databaseHelper.dart';
 import '../usersAndItemsModel.dart';
+import 'package:intl/intl.dart';   
 
 class DeleteItemPage extends StatefulWidget {
   @override
@@ -12,6 +13,8 @@ class _DeleteItemPageState extends State<DeleteItemPage> {
   final ItemDatabaseHelper _databaseHelper = ItemDatabaseHelper();
   List<Item>? items;
   List<bool>? selectedItems;
+
+  NumberFormat numberFormat = NumberFormat.decimalPattern('id');
 
   @override
   void initState() {
@@ -122,13 +125,13 @@ class _DeleteItemPageState extends State<DeleteItemPage> {
                                 Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('ID: ${item.id}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    Text('Nama  : ${item.name}'),
-                                    Text('Tipe     : ${item.type}'),
-                                    Text('Harga  : ${item.price}'),
+                                   children: [
+                                    Text('${item.name} ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                    SizedBox(height: 8.0),
+                                    Text('ID            : ${item.id}'),
+                                    Text('Tipe         : ${item.type}'),
+                                    Text('Kuantitas : ${numberFormat.format(item.quantity)}'),
+                                    Text('Harga      : Rp. ${numberFormat.format(item.price)}'),
                                   ],
                                 ),
                               ),

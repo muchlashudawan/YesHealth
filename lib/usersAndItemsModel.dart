@@ -110,17 +110,36 @@ class Item {
   String name;
   String type;
   int price;
+  int quantity;
   bool isSelected;
   String? imagePath;
 
-  Item({this.id, required this.name, required this.type, required this.price, this.isSelected = false, required this.imagePath});
+  Item({this.id, required this.name, required this.type, required this.price, required this.quantity, this.isSelected = false, required this.imagePath});
 
+  Item copyWith({
+    int? id,
+    String? name,
+    String? type,
+    int? price,
+    int? quantity,
+    String? imagePath,
+  }) {
+    return Item(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      price: price ?? this.price,
+      quantity: quantity ?? this.quantity,
+      imagePath: imagePath ?? this.imagePath,
+    );
+  }
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'name': name,
       'type': type,
       'price': price,
+      'quantity': quantity,
       'imagePath': imagePath,
     };
   }
@@ -139,9 +158,17 @@ class CartItem {
     required this.name,
     required this.quantity,
     required this.price,
-    this.isSelected = false,
+    this.isSelected = true,
     this.imagePath,
   });
+
+  CartItem.fromMap(Map<String, dynamic> map)
+      : id = map['id'],
+        name = map['itemName'],
+        quantity = map['quantity'],
+        price = map['price'],
+        isSelected = map['isSelected'] == 1,
+        imagePath = map['imagePath'];
 
   Map<String, dynamic> toMap() {
     return {
