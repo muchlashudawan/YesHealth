@@ -299,10 +299,199 @@ class ItemDatabaseHelper {
       rethrow; // Rethrow the error to propagate it to the calling code
     }
   }
+
+  Future<Map<String, List<Item>>> getItemsByCategory() async {
+    try {
+      final db = await database;
+      final List<Map<String, dynamic>> maps = await db.query('items');
+
+      Map<String, List<Item>> categoryMap = {};
+
+      for (var map in maps) {
+        Item item = Item(
+          id: map['id'],
+          name: map['name'],
+          type: map['type'],
+          price: map['price'],
+          imagePath: map['imagePath'],
+        );
+
+        if (!categoryMap.containsKey(item.type)) {
+          categoryMap[item.type] = [];
+        }
+
+        categoryMap[item.type]!.add(item);
+      }
+
+      return categoryMap;
+    } catch (e) {
+      print('Error getting items by category: $e');
+      rethrow; // Rethrow the error to propagate it to the calling code
+    }
+  }
+
+  Future<List<String>> getCategories() async {
+    try {
+      final db = await database;
+      final List<Map<String, dynamic>> maps = await db.query('items');
+
+      Set<String> categories = {};
+
+      for (var map in maps) {
+        String category = map['type'];
+        categories.add(category);
+      }
+
+      return categories.toList();
+    } catch (e) {
+      print('Error getting categories: $e');
+      rethrow; // Rethrow the error to propagate it to the calling code
+    }
+  }
+}
+
+// databaseHelper.dart
+class UserHomeDatabaseHelper {
+  static final UserHomeDatabaseHelper _instance =
+      UserHomeDatabaseHelper._internal();
+
+  factory UserHomeDatabaseHelper() {
+    return _instance;
+  }
+
+  UserHomeDatabaseHelper._internal();
+
+  late Database _database;
+
+  Future<Database> get database async {
+    _database = await initDatabase();
+    return _database;
+  }
+
+  Future<Database> initDatabase() async {
+    if (Platform.isWindows || Platform.isLinux) {
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
+    }
+
+    final path = join(await getDatabasesPath(), 'users_home.db');
+
+    return openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) async {
+        await db.execute('''
+          CREATE TABLE wishlist(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId INTEGER,
+            itemName TEXT,
+            imagePath TEXT
+          )
+        ''');
+
+        await db.execute('''
+          CREATE TABLE notifications(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId INTEGER,
+            message TEXT
+          )
+        ''');
+
+        await db.execute('''
+          CREATE TABLE user_cart(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId INTEGER,
+            itemName TEXT,
+            quantity INTEGER,
+            price INTEGER,
+            imagePath TEXT
+          )
+        ''');
+      },
+    );
+  }
+
+  Future<void> updateCartItem(CartItem item) async {
+    print("Update Cart Item Executed!");
+
+    final db = await database;
+    await db.update(
+      'user_cart',
+      item.toMap(),
+      where: 'id = ?',
+      whereArgs: [item.id],
+    );
+  }
+
+  Future<void> removeSelectedItems(int userId) async {
+    print("Remove Selected Items Executed!");
+
+    final db = await database;
+    await db.delete(
+      'user_cart',
+      where: 'userId = ? AND isSelected = ?',
+      whereArgs: [userId, 1],
+    );
+  }
+
+  Future<void> removeFromCart(int userId, int cartItemId) async {
+    print("Remove From Cart Executed!");
+
+    final db = await database;
+    await db.delete(
+      'user_cart',
+      where: 'userId = ? AND id = ?',
+      whereArgs: [userId, cartItemId],
+    );
+  }
+
+  Future<int> addToWishlist(
+      int userId, String itemName, String imagePath) async {
+    final db = await database;
+    return db.insert('wishlist',
+        {'userId': userId, 'itemName': itemName, 'imagePath': imagePath});
+  }
+
+  Future<int> addToNotifications(int userId, String message) async {
+    final db = await database;
+    return db.insert('notifications', {'userId': userId, 'message': message});
+  }
+
+  Future<int> addToCart(int userId, String itemName, int quantity, int price,
+      String imagePath) async {
+      print("Add to Cart Executed!");
+
+    final db = await database;
+    return db.insert('user_cart', {
+      'userId': userId,
+      'itemName': itemName,
+      'quantity': quantity,
+      'price': price,
+      'imagePath': imagePath
+    });
+  }
+
+  Future<List<Map<String, dynamic>>> getWishlist(int userId) async {
+    final db = await database;
+    return db.query('wishlist', where: 'userId = ?', whereArgs: [userId]);
+  }
+
+  Future<List<Map<String, dynamic>>> getNotifications(int userId) async {
+    final db = await database;
+    return db.query('notifications', where: 'userId = ?', whereArgs: [userId]);
+  }
+
+  Future<List<Map<String, dynamic>>> getCart(int userId) async {
+      print("Get Cart Executed!");
+
+    final db = await database;
+    return db.query('user_cart', where: 'userId = ?', whereArgs: [userId]);
+  }
 }
 
 class BannerDatabaseHelper {
-  static final BannerDatabaseHelper _instance = BannerDatabaseHelper._internal();
+  static final BannerDatabaseHelper _instance =
+      BannerDatabaseHelper._internal();
 
   factory BannerDatabaseHelper() {
     return _instance;
@@ -361,7 +550,8 @@ class BannerDatabaseHelper {
   Future<int> deleteBanner(String filename) async {
     try {
       final db = await database;
-      return await db.delete('banners', where: 'filename = ?', whereArgs: [filename]);
+      return await db
+          .delete('banners', where: 'filename = ?', whereArgs: [filename]);
     } catch (e) {
       print('Error deleting bannerModel: $e');
       rethrow; // Rethrow the error to propagate it to the calling code

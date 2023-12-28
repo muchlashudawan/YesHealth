@@ -1,24 +1,48 @@
-// your_cart.dart
 import 'package:flutter/material.dart';
+import '../databaseHelper.dart';
+import '../usersAndItemsModel.dart';
 
 class CartMenu extends StatefulWidget {
+  final User user;
+
+  CartMenu({required this.user});
+
   @override
   _CartMenuState createState() => _CartMenuState();
 }
 
 class _CartMenuState extends State<CartMenu> {
-  List<CartItem> cartItems = [
-    CartItem(name: "Item 1", isSelected: false),
-    CartItem(name: "Item 2", isSelected: false),
-    CartItem(name: "Item 3", isSelected: false),
-  ]; // Replace with your actual cart items
+  late List<CartItem> cartItems;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCart();
+    cartItems = [];
+  }
+
+  Future<void> _loadCart() async {
+    final items = await UserHomeDatabaseHelper().getCart(widget.user.id);
+    setState(() {
+      cartItems = items.map((item) {
+        return CartItem(
+          id: item['id'],
+          name: item['itemName'],
+          quantity: item['quantity'],
+          price: item['price'],
+          isSelected: item['isSelected'] == 1,
+          imagePath: item['imagePath'],
+        );
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: cartItems.isEmpty
           ? Center(
-              child: Text("Keranjang Anda kosong."),
+              child: Text("Your cart is empty."),
             )
           : Column(
               children: [
@@ -27,7 +51,7 @@ class _CartMenuState extends State<CartMenu> {
                     itemCount: cartItems.length,
                     itemBuilder: (context, index) {
                       return Card(
-                        elevation: 4, // Add elevation for a shadow effect
+                        elevation: 4,
                         margin: EdgeInsets.all(8),
                         child: ListTile(
                           title: Text(cartItems[index].name),
@@ -37,15 +61,13 @@ class _CartMenuState extends State<CartMenu> {
                               setState(() {
                                 cartItems[index].isSelected = value!;
                               });
+                              _updateCart(cartItems[index]);
                             },
                           ),
                           trailing: IconButton(
                             icon: Icon(Icons.delete),
                             onPressed: () {
-                              // Remove item from the cart
-                              setState(() {
-                                cartItems.removeAt(index);
-                              });
+                              _removeFromCart(cartItems[index]);
                             },
                           ),
                         ),
@@ -57,69 +79,73 @@ class _CartMenuState extends State<CartMenu> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     onPressed: () {
-                      // Get selected items and remove them from the cart
-                      List<CartItem> selectedItems =
-                          cartItems.where((item) => item.isSelected).toList();
-
-                      // This is just a placeholder, you can replace it with your actual buy logic
-                      if (selectedItems.isNotEmpty) {
-                        setState(() {
-                          cartItems.removeWhere((item) => item.isSelected);
-                        });
-
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Pembelian Selesai."),
-                              content: Text(
-                                  "Terima kasih atas pembelian Anda sebanyak ${selectedItems.length} item."),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text("OK"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Tidak ada item yang dipilih."),
-                              content: Text("Silakan pilih item untuk dibeli."),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text("OK"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
+                      _checkout();
                     },
-                    child: Text("Beli"),
-                    style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all<Size>(Size(200, 50)),
-                    )
+                    child: Text("Buy"),
                   ),
                 ),
               ],
             ),
     );
   }
-}
 
-class CartItem {
-  final String name;
-  bool isSelected;
+  void _updateCart(CartItem item) async {
+    await UserHomeDatabaseHelper().updateCartItem(item);
+  }
 
-  CartItem({required this.name, required this.isSelected});
+  void _removeFromCart(CartItem item) async {
+    if (item.id != null) {
+      await UserHomeDatabaseHelper().removeFromCart(widget.user.id, item.id!);
+      _loadCart();
+    }
+  }
+
+  void _checkout() async {
+    // Get selected items and remove them from the cart
+    List<CartItem> selectedItems =
+        cartItems.where((item) => item.isSelected).toList();
+
+    // This is just a placeholder, you can replace it with your actual buy logic
+    if (selectedItems.isNotEmpty) {
+      await UserHomeDatabaseHelper().removeSelectedItems(widget.user.id);
+      _loadCart();
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Purchase Completed."),
+            content: Text(
+                "Thank you for your purchase of ${selectedItems.length} items."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("No items selected."),
+            content: Text("Please select items to purchase."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 }

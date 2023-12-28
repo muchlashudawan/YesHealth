@@ -8,18 +8,24 @@ import 'customer_pages/home.dart';
 import 'customer_pages/cart.dart';
 import 'customer_pages/profile.dart';
 import 'login/login.dart';
+import 'usersAndItemsModel.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows) {
     setWindowMaxSize(const Size(1024, 768));
-    setWindowMinSize(const Size(512, 384));
+    //setWindowMinSize(const Size(512, 384));
     Future<Null>.delayed(Duration(seconds: 1), () {
       setWindowFrame(
           Rect.fromCenter(center: Offset(1000, 500), width: 600, height: 1000));
     });
   }
-  runApp(MyApp());
+  runApp(  
+    ChangeNotifierProvider(
+      create: (context) => UserData(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -52,11 +58,18 @@ class _MyAppState extends State<MyMainApp> {
   int _currentIndex = 1;
   final PageController _pageController = PageController(initialPage: 1);
 
-  final List<Widget> _pages = [
-    CartMenu(),
-    HomePage(),
-    Profile(),
-  ];
+  late List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      CartMenu(
+          user: Provider.of<UserData>(context, listen: false).loggedInUser as User),
+      HomePage(),
+      Profile(),
+    ];
+  }
 
   void onItemTapped(int index) {
     setState(() {
@@ -189,5 +202,3 @@ class NotificationPage extends StatelessWidget {
     );
   }
 }
-
-// Rest of the code remains the same

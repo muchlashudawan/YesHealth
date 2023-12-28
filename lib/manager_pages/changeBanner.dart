@@ -119,25 +119,50 @@ class _ChangeBannerPageState extends State<ChangeBannerPage> {
                 ),
                 SizedBox(height: 16.0),
                 if (isBannerSubmitted)
-                  Image.file(File(_bannerImagePath!))
+                  Container(
+                    height: 170,
+                    width: 130,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      image: DecorationImage(
+                        image: FileImage(File(_bannerImagePath!)),
+                        fit: BoxFit
+                            .fill, // Ensure the image covers the entire container
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black
+                              .withOpacity(0.4), // Light black shadow
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                      border: Border.all(
+                        color: Colors.black
+                            .withOpacity(0.1), // Light black outline
+                        width: 1,
+                      ),
+                    ),
+                  )
                 else
                   Container(
-                  height: 170,
-                  margin: EdgeInsets.all(10),
-                  child: PageView.builder(
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        width: 120,
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                        // Add the content of each banner here
-                      );
-                    },
+                    height: 170,
+                    margin: EdgeInsets.all(10),
+                    child: PageView.builder(
+                      itemCount: 3,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          width: 120,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          ),
+                          // Add the content of each banner here
+                        );
+                      },
+                    ),
                   ),
-                ),
                 SizedBox(height: 16.0),
                 ElevatedButton.icon(
                   onPressed: () {

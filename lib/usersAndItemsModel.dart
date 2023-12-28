@@ -126,6 +126,37 @@ class Item {
   }
 }
 
+class CartItem {
+  int? id;
+  String name;
+  int quantity;
+  int price;
+  bool isSelected;
+  String? imagePath;
+
+  CartItem({
+    this.id,
+    required this.name,
+    required this.quantity,
+    required this.price,
+    this.isSelected = false,
+    this.imagePath,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'itemName': name,
+      'quantity': quantity,
+      'price': price,
+      'isSelected': isSelected ? 1 : 0,
+      'imagePath': imagePath,
+    };
+  }
+}
+
+
+
 class BannerModel {
   final String filename;
 
