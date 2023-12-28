@@ -132,6 +132,8 @@ class _DeleteItemPageState extends State<DeleteItemPage> {
                                     Text('Tipe         : ${item.type}'),
                                     Text('Kuantitas : ${numberFormat.format(item.quantity)}'),
                                     Text('Harga      : Rp. ${numberFormat.format(item.price)}'),
+                                    Text(item.description ?? "Tidak AdA Deskripsi"),
+
                                   ],
                                 ),
                               ),
@@ -161,7 +163,7 @@ class _DeleteItemPageState extends State<DeleteItemPage> {
   }
 
   void _showDeleteConfirmation(BuildContext context) {
-    int itemCount = selectedItems?.where((selected) => selected)?.length ?? 0;
+    int itemCount = selectedItems?.where((selected) => selected).length ?? 0;
 
     if (itemCount > 0) {
       showDialog(
@@ -212,7 +214,7 @@ class _DeleteItemPageState extends State<DeleteItemPage> {
       // Delete selected items from the database
       for (int index in selectedIndices) {
         if (items != null && items!.isNotEmpty && index < items!.length) {
-          await _databaseHelper.deleteItem(items![index]!.id!);
+          await _databaseHelper.deleteItem(items![index].id!);
         }
       }
 

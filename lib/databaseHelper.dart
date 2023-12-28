@@ -1,9 +1,267 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 import 'usersAndItemsModel.dart';
+
+class UserHomeDatabaseHelper {
+  static final UserHomeDatabaseHelper _instance =
+      UserHomeDatabaseHelper._internal();
+
+  factory UserHomeDatabaseHelper() {
+    return _instance;
+  }
+
+  UserHomeDatabaseHelper._internal();
+
+  late Database _database;
+
+  Future<Database> get database async {
+    _database = await initDatabase();
+    return _database;
+  }
+
+  Future<Database> initDatabase() async {
+    if (Platform.isWindows || Platform.isLinux) {
+      databaseFactoryOrNull = null;
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
+    }
+
+    final path = join(await getDatabasesPath(), 'users_home.db');
+
+    return openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) async {
+        await db.execute('''
+          CREATE TABLE wishlist(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId INTEGER,
+            itemName TEXT,
+            imagePath TEXT
+          )
+        ''');
+
+        await db.execute('''
+          CREATE TABLE notifications(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId INTEGER,
+            title TEXT,
+            message TEXT,
+            icon TEXT
+          )
+        ''');
+
+        await db.execute('''
+          CREATE TABLE user_cart(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId INTEGER,
+            itemName TEXT,
+            quantity INTEGER,
+            isSelected BOOLEAN,
+            price INTEGER,
+            imagePath TEXT
+          )
+        ''');
+      },
+    );
+  }
+
+  // CART
+  Future<void> updateCartItem(CartItem item) async {
+    print("Update Cart Item Executed!");
+
+    final db = await database;
+    await db.update(
+      'user_cart',
+      item.toMap(),
+      where: 'id = ?',
+      whereArgs: [item.id],
+    );
+  }
+
+  Future<void> removeSelectedItems(int userId) async {
+    print("Remove Selected Items Executed!");
+
+    final db = await database;
+    await db.delete(
+      'user_cart',
+      where: 'userId = ? AND isSelected = ?',
+      whereArgs: [userId, 1],
+    );
+  }
+
+  Future<void> addToCart(int userId, String itemName, int quantity, int price,
+      String imagePath) async {
+    try {
+      // Check if the item is already in the cart
+      CartItem existingCartItem = await getCartItem(userId, itemName);
+
+      if (existingCartItem.id != null) {
+        // If the item is already in the cart, update the quantity
+        await updateCartItem(
+          CartItem(
+            id: existingCartItem.id,
+            name: itemName,
+            quantity: existingCartItem.quantity + quantity,
+            price: price,
+            imagePath: imagePath,
+          ),
+        );
+      } else {
+        // If the item is not in the cart, add it to the cart
+        await _addToCartDatabase(userId, itemName, quantity, price, imagePath);
+      }
+    } catch (e) {
+      print('Error adding to cart: $e');
+    }
+  }
+
+  Future<void> removeFromCart(int userId, int cartItemId) async {
+    try {
+      // Remove the item from the cart
+      await _removeFromCartDatabase(userId, cartItemId);
+    } catch (e) {
+      print('Error removing from cart: $e');
+    }
+  }
+
+  Future<void> _addToCartDatabase(int userId, String itemName, int quantity,
+      int price, String imagePath) async {
+    final db = await database;
+    await db.insert('user_cart', {
+      'userId': userId,
+      'itemName': itemName,
+      'quantity': quantity,
+      'price': price,
+      'imagePath': imagePath
+    });
+  }
+
+  Future<void> _removeFromCartDatabase(int userId, int cartItemId) async {
+    final db = await database;
+
+    // Fetch the cart item before removing it
+    CartItem cartItem = await getCartItemById(userId, cartItemId);
+
+    // Remove the item from the cart
+    await db.delete('user_cart',
+        where: 'userId = ? AND id = ?', whereArgs: [userId, cartItemId]);
+
+    // Add the item back to stock (assuming you have a method for this)
+    ItemDatabaseHelper()
+        .updateItemQuantity(cartItem.name, cartItem.quantity, "return");
+  }
+
+  Future<void> updateItemQuantity(
+      String itemName, int quantityChange, String type) async {
+    try {
+      // Update the item quantity using ItemDatabaseHelper
+      await ItemDatabaseHelper()
+          .updateItemQuantity(itemName, quantityChange, type);
+    } catch (e) {
+      print('Error updating item quantity: $e');
+    }
+  }
+
+  Future<CartItem> getCartItem(int userId, String itemName) async {
+    final db = await database;
+    List<Map<String, dynamic>> result = await db.query('user_cart',
+        where: 'userId = ? AND itemName = ?', whereArgs: [userId, itemName]);
+
+    if (result.isNotEmpty) {
+      return CartItem.fromMap(result.first);
+    } else {
+      return CartItem(
+        name: 'defaultName', // Provide a default name
+        quantity: 0, // Provide a default quantity
+        price: 0, // Provide a default price
+        // Add other required parameters with appropriate default values
+      );
+    }
+  }
+
+  Future<CartItem> getCartItemById(int userId, int cartItemId) async {
+    final db = await database;
+    List<Map<String, dynamic>> cartItems = await db.query(
+      "user_cart",
+      where: 'userId = ? AND id = ?',
+      whereArgs: [userId, cartItemId],
+    );
+
+    if (cartItems.isNotEmpty) {
+      return CartItem.fromMap(cartItems.first);
+    } else {
+      throw Exception('Cart item not found.');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getCart(int userId) async {
+    print("Get Cart Executed!");
+
+    final db = await database;
+    return db.query('user_cart', where: 'userId = ?', whereArgs: [userId]);
+  }
+
+  // WISH LIST
+  Future<int> addToWishlist(
+      int userId, String itemName, String imagePath) async {
+    final db = await database;
+    return db.insert('wishlist',
+        {'userId': userId, 'itemName': itemName, 'imagePath': imagePath});
+  }
+
+  Future<List<Map<String, dynamic>>> getWishlist(int userId) async {
+    final db = await database;
+    return db.query('wishlist', where: 'userId = ?', whereArgs: [userId]);
+  }
+
+  Future<void> removeFromWishlist(
+      int userId, String itemName, String imagePath) async {
+    final db = await database;
+    await db.delete('wishlist',
+        where: 'userId = ? AND itemName = ? AND imagePath = ?',
+        whereArgs: [userId, itemName, imagePath]);
+  }
+
+  // NOTIFICATION
+  Future<List<Map<String, dynamic>>> getNotifications(int userId) async {
+    final db = await database;
+    return db.query('notifications',
+        where: 'userId = ?',
+        whereArgs: [userId],
+        columns: ['id', 'userId', 'title', 'message', 'icon']);
+  }
+
+  Future<int> addToNotifications(
+      int userId, String title, String message, String icon) async {
+    final db = await database;
+    final notificationId = await db.insert('notifications', {
+      'userId': userId,
+      'title': title,
+      'message': message,
+      'icon': icon,
+    });
+
+    bool canVibrate = await Vibrate.canVibrate;
+
+    if (canVibrate) {
+      Vibrate.vibrate();
+      Vibrate.vibrate();
+    }
+    return notificationId;
+  }
+
+  Future<void> removeNotification(int userId, int notificationId) async {
+    final db = await database;
+    await db.delete(
+      'notifications',
+      where: 'userId = ? AND id = ?',
+      whereArgs: [userId, notificationId],
+    );
+  }
+}
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -245,6 +503,7 @@ class ItemDatabaseHelper {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
             type TEXT,
+            description TEXT,
             price INTEGER,
             quantity INTEGER,
             imagePath TEXT
@@ -272,7 +531,14 @@ class ItemDatabaseHelper {
         return await updateItem(item);
       } else {
         // If doesn't exist, insert a new item
-        return await db.insert('items', item.toMap());
+        return await db.insert('items', {
+          'name': item.name,
+          'type': item.type,
+          'description': item.description, // Added description field
+          'price': item.price,
+          'quantity': item.quantity,
+          'imagePath': item.imagePath,
+        });
       }
     } catch (e) {
       print('Error adding item: $e');
@@ -319,6 +585,7 @@ class ItemDatabaseHelper {
           id: maps[i]['id'],
           name: maps[i]['name'],
           type: maps[i]['type'],
+          description: maps[i]['description'],
           price: maps[i]['price'],
           quantity: maps[i]['quantity'],
           imagePath: maps[i]['imagePath'],
@@ -342,6 +609,7 @@ class ItemDatabaseHelper {
           id: map['id'],
           name: map['name'],
           type: map['type'],
+          description: map['description'],
           price: map['price'],
           quantity: map['quantity'],
           imagePath: map['imagePath'],
@@ -410,6 +678,7 @@ class ItemDatabaseHelper {
           id: existingItem.id,
           name: itemName,
           type: existingItem.type,
+          description: existingItem.description,
           quantity: newQuantity,
           price: existingItem.price,
           imagePath: existingItem.imagePath,
@@ -436,6 +705,7 @@ class ItemDatabaseHelper {
           id: maps.first['id'],
           name: maps.first['name'],
           type: maps.first['type'],
+          description: maps.first['description'],
           price: maps.first['price'],
           quantity: maps.first['quantity'],
           imagePath: maps.first['imagePath'],
@@ -447,220 +717,6 @@ class ItemDatabaseHelper {
       print('Error getting item by name: $e');
       rethrow;
     }
-  }
-}
-
-class UserHomeDatabaseHelper {
-  static final UserHomeDatabaseHelper _instance =
-      UserHomeDatabaseHelper._internal();
-
-  factory UserHomeDatabaseHelper() {
-    return _instance;
-  }
-
-  UserHomeDatabaseHelper._internal();
-
-  late Database _database;
-
-  Future<Database> get database async {
-    _database = await initDatabase();
-    return _database;
-  }
-
-  Future<Database> initDatabase() async {
-    if (Platform.isWindows || Platform.isLinux) {
-      databaseFactoryOrNull = null;
-      sqfliteFfiInit();
-      databaseFactory = databaseFactoryFfi;
-    }
-
-    final path = join(await getDatabasesPath(), 'users_home.db');
-
-    return openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute('''
-          CREATE TABLE wishlist(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            userId INTEGER,
-            itemName TEXT,
-            imagePath TEXT
-          )
-        ''');
-
-        await db.execute('''
-          CREATE TABLE notifications(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            userId INTEGER,
-            message TEXT
-          )
-        ''');
-
-        await db.execute('''
-          CREATE TABLE user_cart(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            userId INTEGER,
-            itemName TEXT,
-            quantity INTEGER,
-            isSelected BOOLEAN,
-            price INTEGER,
-            imagePath TEXT
-          )
-        ''');
-      },
-    );
-  }
-
-  Future<void> updateCartItem(CartItem item) async {
-    print("Update Cart Item Executed!");
-
-    final db = await database;
-    await db.update(
-      'user_cart',
-      item.toMap(),
-      where: 'id = ?',
-      whereArgs: [item.id],
-    );
-  }
-
-  Future<void> removeSelectedItems(int userId) async {
-    print("Remove Selected Items Executed!");
-
-    final db = await database;
-    await db.delete(
-      'user_cart',
-      where: 'userId = ? AND isSelected = ?',
-      whereArgs: [userId, 1],
-    );
-  }
-
-  Future<int> addToWishlist(
-      int userId, String itemName, String imagePath) async {
-    final db = await database;
-    return db.insert('wishlist',
-        {'userId': userId, 'itemName': itemName, 'imagePath': imagePath});
-  }
-
-  Future<int> addToNotifications(int userId, String message) async {
-    final db = await database;
-    return db.insert('notifications', {'userId': userId, 'message': message});
-  }
-
-  Future<void> addToCart(int userId, String itemName, int quantity, int price,
-      String imagePath) async {
-    try {
-      // Check if the item is already in the cart
-      CartItem existingCartItem = await getCartItem(userId, itemName);
-
-      if (existingCartItem.id != null) {
-        // If the item is already in the cart, update the quantity
-        await updateCartItem(
-          CartItem(
-            id: existingCartItem.id,
-            name: itemName,
-            quantity: existingCartItem.quantity + quantity,
-            price: price,
-            imagePath: imagePath,
-          ),
-        );
-      } else {
-        // If the item is not in the cart, add it to the cart
-        await _addToCartDatabase(userId, itemName, quantity, price, imagePath);
-      }
-    } catch (e) {
-      print('Error adding to cart: $e');
-    }
-  }
-
-  Future<void> removeFromCart(int userId, int cartItemId) async {
-    try {
-      // Get the cart item details before removing it
-      CartItem cartItem = await getCartItemById(userId, cartItemId);
-
-      // Remove the item from the cart
-      await _removeFromCartDatabase(userId, cartItemId);
-    } catch (e) {
-      print('Error removing from cart: $e');
-    }
-  }
-
-  Future<void> _addToCartDatabase(int userId, String itemName, int quantity,
-      int price, String imagePath) async {
-    final db = await database;
-    await db.insert('user_cart', {
-      'userId': userId,
-      'itemName': itemName,
-      'quantity': quantity,
-      'price': price,
-      'imagePath': imagePath
-    });
-  }
-
-  Future<void> _removeFromCartDatabase(int userId, int cartItemId) async {
-    final db = await database;
-    await db.delete('user_cart',
-        where: 'userId = ? AND id = ?', whereArgs: [userId, cartItemId]);
-  }
-
-  Future<void> updateItemQuantity(
-      String itemName, int quantityChange, String type) async {
-    try {
-      // Update the item quantity using ItemDatabaseHelper
-      await ItemDatabaseHelper()
-          .updateItemQuantity(itemName, quantityChange, type);
-    } catch (e) {
-      print('Error updating item quantity: $e');
-    }
-  }
-
-  Future<CartItem> getCartItem(int userId, String itemName) async {
-    final db = await database;
-    List<Map<String, dynamic>> result = await db.query('user_cart',
-        where: 'userId = ? AND itemName = ?', whereArgs: [userId, itemName]);
-
-    if (result.isNotEmpty) {
-      return CartItem.fromMap(result.first);
-    } else {
-      return CartItem(
-        name: 'defaultName', // Provide a default name
-        quantity: 0, // Provide a default quantity
-        price: 0, // Provide a default price
-        // Add other required parameters with appropriate default values
-      );
-    }
-  }
-
-  Future<CartItem> getCartItemById(int userId, int cartItemId) async {
-    final db = await database;
-    List<Map<String, dynamic>> cartItems = await db.query(
-      "user_cart",
-      where: 'userId = ? AND id = ?',
-      whereArgs: [userId, cartItemId],
-    );
-
-    if (cartItems.isNotEmpty) {
-      return CartItem.fromMap(cartItems.first);
-    } else {
-      throw Exception('Cart item not found.');
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> getWishlist(int userId) async {
-    final db = await database;
-    return db.query('wishlist', where: 'userId = ?', whereArgs: [userId]);
-  }
-
-  Future<List<Map<String, dynamic>>> getNotifications(int userId) async {
-    final db = await database;
-    return db.query('notifications', where: 'userId = ?', whereArgs: [userId]);
-  }
-
-  Future<List<Map<String, dynamic>>> getCart(int userId) async {
-    print("Get Cart Executed!");
-
-    final db = await database;
-    return db.query('user_cart', where: 'userId = ?', whereArgs: [userId]);
   }
 }
 

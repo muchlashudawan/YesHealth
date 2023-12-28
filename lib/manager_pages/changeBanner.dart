@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:hexcolor/hexcolor.dart';
 import '../databaseHelper.dart';
 import '../usersAndItemsModel.dart';
 
@@ -155,7 +156,7 @@ class _ChangeBannerPageState extends State<ChangeBannerPage> {
                         return Container(
                           width: 120,
                           decoration: BoxDecoration(
-                            color: Colors.blue,
+                            color: HexColor("6AB29B"),
                             borderRadius: BorderRadius.all(Radius.circular(5)),
                           ),
                           // Add the content of each banner here

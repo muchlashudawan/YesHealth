@@ -366,7 +366,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Daftar Akun'),
-        backgroundColor: HexColor("304D30"),
+        backgroundColor: HexColor("147158"),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -458,7 +458,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                ElevatedButton(
                 onPressed: _registerUser,
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(HexColor("004225")),
+                  backgroundColor: MaterialStateProperty.all<Color>(HexColor("6AB29B")),
                   minimumSize: MaterialStateProperty.all<Size>(Size(200, 50)), // Adjust the size as needed
 
                 ),

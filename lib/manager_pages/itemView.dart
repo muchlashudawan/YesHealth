@@ -84,9 +84,6 @@ class _ViewItemPageState extends State<ViewItemPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: (items != null && items!.isNotEmpty) ? items!.map((item) {
                       return GestureDetector(
-                        onTap: () {
-                          _showEditModal(context, item);
-                        },
                         child: Container(
                           margin: EdgeInsets.symmetric(vertical: 8.0),
                           padding: EdgeInsets.all(16.0),
@@ -107,6 +104,8 @@ class _ViewItemPageState extends State<ViewItemPage> {
                                     Text('Tipe         : ${item.type}'),
                                     Text('Kuantitas : ${numberFormat.format(item.quantity)}'),
                                     Text('Harga      : Rp. ${numberFormat.format(item.price)}'),
+                                    Text(item.description ?? "Tidak AdA Deskripsi"),
+
                                   ],
                                 ),
                               ),
@@ -133,10 +132,5 @@ class _ViewItemPageState extends State<ViewItemPage> {
         ),
       ),
     );
-  }
-
-  void _showEditModal(BuildContext context, Item item) {
-    // Your existing code for showing the edit modal
-    // ...
   }
 }

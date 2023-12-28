@@ -109,10 +109,9 @@ class _EditItemPageState extends State<EditItemPage> {
                                       SizedBox(height: 8.0),
                                       Text('ID            : ${item.id}'),
                                       Text('Tipe         : ${item.type}'),
-                                      Text(
-                                          'Kuantitas : ${numberFormat.format(item.quantity)}'),
-                                      Text(
-                                          'Harga      : Rp. ${numberFormat.format(item.price)}'),
+                                      Text('Kuantitas : ${numberFormat.format(item.quantity)}'),
+                                      Text('Harga      : Rp. ${numberFormat.format(item.price)}'),
+                                      Text(item.description ?? "Tidak AdA Deskripsi"),
                                     ],
                                   ),
                                 ),
@@ -147,6 +146,7 @@ class _EditItemPageState extends State<EditItemPage> {
     // Set initial values for the text fields
     String newName = item.name;
     String newType = item.type;
+    String newDescription = item.description;
     String newQuantity = item.quantity.toString();
     String newPrice = item.price.toString();
     String? newImagePath = item.imagePath;
@@ -190,6 +190,13 @@ class _EditItemPageState extends State<EditItemPage> {
                   },
                   decoration: InputDecoration(labelText: 'Harga Obat per Pack'),
                 ),
+                TextField(
+                  controller: TextEditingController(text: newDescription),
+                  onChanged: (value) {
+                    newDescription = value;
+                  },
+                  decoration: InputDecoration(labelText: 'Deskripsi'),
+                ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () async {
@@ -198,6 +205,7 @@ class _EditItemPageState extends State<EditItemPage> {
                       id: item.id,
                       name: newName,
                       type: newType,
+                      description: newDescription,
                       quantity: int.parse(newQuantity),
                       price: int.parse(newPrice),
                       imagePath: newImagePath,

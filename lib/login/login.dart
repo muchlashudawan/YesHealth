@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:hexcolor/hexcolor.dart';
 import '../main.dart';
 import './register.dart';
 import '../manager_pages/createAccount.dart';
 import '../databaseHelper.dart';
 import '../usersAndItemsModel.dart';
 import '../manager_pages/home.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 class UserData extends ChangeNotifier {
   bool isLoggedIn = false;
@@ -172,11 +172,11 @@ class _LoginPageState extends State<LoginPage> {
                           textScaleFactor: 2,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: HexColor("304D30"),
+                            color: HexColor("147158"),
                           ),
                         ),
                       ),
-                      color: HexColor("304D30"),
+                      color: HexColor("147158"),
                     ),
                     Title(
                       child: GestureDetector(
@@ -190,11 +190,11 @@ class _LoginPageState extends State<LoginPage> {
                           textScaleFactor: 1.2,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: HexColor("739072"),
+                            color: HexColor("147158"),
                           ),
                         ),
                       ),
-                      color: HexColor("739072"),
+                      color: HexColor("147158"),
                     ),
                     if (_errorMessage != null) ...[
                       SizedBox(height: 15.0),
@@ -211,9 +211,9 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           labelText: 'Username',
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: HexColor("1E5128")),
+                            borderSide: BorderSide(color: HexColor("147158")),
                           ),
-                          labelStyle: TextStyle(color: HexColor("1E5128")),
+                          labelStyle: TextStyle(color: HexColor("147158")),
                         ),
                       ),
                     ),
@@ -226,9 +226,9 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           labelText: 'Password',
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: HexColor("304D30")),
+                            borderSide: BorderSide(color: HexColor("147158")),
                           ),
-                          labelStyle: TextStyle(color: HexColor("304D30")),
+                          labelStyle: TextStyle(color: HexColor("147158")),
                         ),
                       ),
                     ),
@@ -239,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
-                            HexColor("#004225")),
+                            HexColor("#6AB29B")),
                         minimumSize:
                             MaterialStateProperty.all<Size>(Size(200, 50)),
                       ),

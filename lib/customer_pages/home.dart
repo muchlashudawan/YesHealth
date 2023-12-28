@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:hexcolor/hexcolor.dart';
 import '../databaseHelper.dart';
 import '../usersAndItemsModel.dart';
 import '../login/login.dart';
@@ -34,7 +35,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    
     User loggedInUser = Provider.of<UserData>(context).loggedInUser as User;
     return Scaffold(
       body: Stack(
@@ -47,8 +47,8 @@ class _HomePageState extends State<HomePage> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.lightBlue,
-                  Colors.lightBlue.withOpacity(0.0), // Fade to transparent
+                  HexColor("147158"),
+                  HexColor("147158").withOpacity(0.0), // Fade to transparent
                 ],
               ),
               borderRadius: BorderRadius.only(
@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                               return Container(
                                 width: 120,
                                 decoration: BoxDecoration(
-                                  color: Colors.blue,
+                                  color: HexColor("6AB29B"),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(5)),
                                   boxShadow: [
@@ -242,9 +242,7 @@ class _HomePageState extends State<HomePage> {
 
     return GestureDetector(
       onTap: () {
-        if (isStockAvailable) {
-          _showItemDetailsBottomSheet(item, loggedInUser);
-        }
+        _showItemDetailsBottomSheet(item, loggedInUser);
       },
       child: Container(
         width: 150,
@@ -304,11 +302,59 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showItemDetailsBottomSheet(Item item, User loggedInUser) {
-    int selectedQuantity = 0; // Default quantity
-    String? quantityError; // Error message for invalid quantity
+    int selectedQuantity = 1;
+    String? quantityError;
     NumberFormat numberFormat = NumberFormat.decimalPattern('id');
+    bool isInWishlist = false;
+
+    Future<void> checkWishlist() async {
+      List<Map<String, dynamic>> wishlist =
+          await UserHomeDatabaseHelper().getWishlist(loggedInUser.id);
+
+      for (Map<String, dynamic> entry in wishlist) {
+        if (entry['itemName'] == item.name &&
+            entry['imagePath'] == item.imagePath) {
+          setState(() {
+            isInWishlist = true;
+          });
+          break;
+        }
+      }
+    }
+
+    void _showSnackbar(String message) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+
+    Future<void> addToWishlist() async {
+      await UserHomeDatabaseHelper()
+          .addToWishlist(loggedInUser.id, item.name, item.imagePath!);
+      setState(() {
+        isInWishlist = true;
+      });
+      Navigator.of(context).pop(); // Close the bottom sheet
+      _showSnackbar('${item.name} ditambahkan ke Wishlist');
+    }
+
+    Future<void> removeFromWishlist() async {
+      await UserHomeDatabaseHelper()
+          .removeFromWishlist(loggedInUser.id, item.name, item.imagePath!);
+      setState(() {
+        isInWishlist = false;
+      });
+      Navigator.of(context).pop(); // Close the bottom sheet
+      _showSnackbar('${item.name} dihapus dari Wishlist');
+    }
+
+    checkWishlist();
 
     void addToCart() {
+      checkWishlist();
       if (selectedQuantity.isNaN) {
         setState(() {
           quantityError = 'Jumlah yang dimasukkan harus berupa nomor.';
@@ -320,7 +366,6 @@ class _HomePageState extends State<HomePage> {
         });
       } else if (selectedQuantity > 0) {
         Navigator.of(context).pop();
-        print("User Selected Quantity Is $selectedQuantity");
         _addToCart(item, loggedInUser, selectedQuantity);
       } else {
         setState(() {
@@ -349,11 +394,10 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Product image on the right-top side
                         Text(
                           item.name,
                           style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                              fontSize: 26, fontWeight: FontWeight.bold),
                         ),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
@@ -380,8 +424,9 @@ class _HomePageState extends State<HomePage> {
                       'Rp. ${numberFormat.format(item.price)} @ Pack',
                       style: TextStyle(fontSize: 18),
                     ),
+                    SizedBox(height: 8),
+                    Text(item.description),
                     SizedBox(height: 16),
-                    // Error text for invalid quantity
                     Visibility(
                       visible: quantityError != null,
                       child: Text(
@@ -392,66 +437,104 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Jumlah: ',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        // Input field for quantity with error text
-                        Container(
-                          width: 160,
-                          child: TextFormField(
-                            initialValue: selectedQuantity.toString(),
-                            keyboardType: TextInputType.number,
-                            onChanged: (value) {
-                              // Update selected quantity when the user types
-                              if (value.isEmpty) {
-                                selectedQuantity = 0;
-                              } else {
-                                int parsedValue = int.tryParse(value) ?? 0;
-                                selectedQuantity =
-                                    parsedValue < 0 ? 0 : parsedValue;
-                                // Clear error message if the input is valid
-                              }
-                              // Update the UI
-                              setStateModal(() {});
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    // Stretched "Tambah Ke Keranjang" button
-                    ElevatedButton(
-                      onPressed: () {
-                        if (selectedQuantity <= item.quantity) {
-                          addToCart();
-                        }
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            selectedQuantity > item.quantity ||
-                                    selectedQuantity <= 0
-                                ? Colors.grey
-                                : Colors.blue),
-                        padding: MaterialStateProperty.all(EdgeInsets.all(16)),
-                        minimumSize:
-                            MaterialStateProperty.all<Size>(Size(200, 50)),
-                      ),
+                    Visibility(
+                      visible: item.quantity > 0,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(Icons.shopping_cart,
-                              color: Colors.white), // Add cart icon
-                          SizedBox(
-                              width: 8), // Add some space between icon and text
                           Text(
-                            'Tambah Ke Keranjang',
-                            style: TextStyle(fontSize: 18),
+                            'Jumlah: ',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Container(
+                            width: 160,
+                            child: TextFormField(
+                              initialValue: selectedQuantity.toString(),
+                              keyboardType: TextInputType.number,
+                              onChanged: (value) {
+                                if (value.isEmpty) {
+                                  selectedQuantity = 0;
+                                } else {
+                                  int parsedValue = int.tryParse(value) ?? 0;
+                                  selectedQuantity =
+                                      parsedValue < 0 ? 0 : parsedValue;
+                                }
+                                setStateModal(() {});
+                              },
+                            ),
                           ),
                         ],
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    Visibility(
+                      visible: item.quantity > 0,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (selectedQuantity <= item.quantity) {
+                            addToCart();
+                          }
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              selectedQuantity > item.quantity ||
+                                      selectedQuantity <= 0
+                                  ? Colors.grey
+                                  : Colors.blue),
+                          padding:
+                              MaterialStateProperty.all(EdgeInsets.all(16)),
+                          minimumSize:
+                              MaterialStateProperty.all<Size>(Size(200, 50)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.shopping_cart, color: Colors.white),
+                            SizedBox(width: 8),
+                            Text(
+                              'Tambah Ke Keranjang',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: item.quantity == 0,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (isInWishlist) {
+                            removeFromWishlist();
+                          } else {
+                            addToWishlist();
+                          }
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              isInWishlist ? Colors.red : Colors.blue),
+                          padding:
+                              MaterialStateProperty.all(EdgeInsets.all(16)),
+                          minimumSize:
+                              MaterialStateProperty.all<Size>(Size(200, 50)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              isInWishlist
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              isInWishlist
+                                  ? 'Hapus dari Wishlist'
+                                  : 'Tambahkan ke Wishlist',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

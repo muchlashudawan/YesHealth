@@ -109,17 +109,27 @@ class Item {
   int? id;
   String name;
   String type;
+  String description;
   int price;
   int quantity;
   bool isSelected;
   String? imagePath;
 
-  Item({this.id, required this.name, required this.type, required this.price, required this.quantity, this.isSelected = false, required this.imagePath});
+  Item(
+      {this.id,
+      required this.name,
+      required this.type,
+      required this.description,
+      required this.price,
+      required this.quantity,
+      this.isSelected = false,
+      required this.imagePath});
 
   Item copyWith({
     int? id,
     String? name,
     String? type,
+    String? description,
     int? price,
     int? quantity,
     String? imagePath,
@@ -128,16 +138,19 @@ class Item {
       id: id ?? this.id,
       name: name ?? this.name,
       type: type ?? this.type,
+      description: description ?? this.description,
       price: price ?? this.price,
       quantity: quantity ?? this.quantity,
       imagePath: imagePath ?? this.imagePath,
     );
   }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'name': name,
       'type': type,
+      'description': description,
       'price': price,
       'quantity': quantity,
       'imagePath': imagePath,
@@ -181,8 +194,6 @@ class CartItem {
     };
   }
 }
-
-
 
 class BannerModel {
   final String filename;

@@ -13,6 +13,7 @@ class AddItemPage extends StatefulWidget {
 class _AddItemPageState extends State<AddItemPage> {
   String itemName = '';
   String itemType = '';
+  String itemDescription = '';
   int itemPrice = 0;
   int itemQuantity = 0;
 
@@ -22,6 +23,7 @@ class _AddItemPageState extends State<AddItemPage> {
   String? _itemTypeError;
   String? _itemPriceError;
   String? _itemQuantityError;
+  String? _itemDescriptionError;
   String? _imagePath;
 
   bool isImageSubmitted = false;
@@ -128,13 +130,28 @@ class _AddItemPageState extends State<AddItemPage> {
       return;
     }
 
+     // ITEM DESCRIPTION VALIDATION
+    if (itemDescription.isEmpty) {
+      setState(() {
+        _itemDescriptionError = null;
+        itemDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ullamcorper nibh felis, vitae tincidunt nibh consectetur ac. Nunc quis lacus iaculis, dictum velit mattis, tincidunt arcu. Donec placerat quis tortor vel sodales. Nunc congue condimentum maximus. Donec dictum eleifend est id aliquam. Vestibulum dolor ipsum, imperdiet in lectus sed, congue tincidunt felis. Proin eu est sed magna porta tempor id sit amet felis. Proin semper dictum massa, ut eleifend dui luctus quis.";
+      });
+      return;
+    } else {
+      setState(() {
+        _itemDescriptionError = null;
+      });
+    }
+
     // ADD TO DATABASE
     final newItem = Item(
         name: itemName,
         type: itemType,
+        description: itemDescription,
         price: itemPrice,
         quantity: itemQuantity,
         imagePath: _imagePath);
+
     final result = await _databaseHelper.addItem(newItem);
 
     // REDIRECT TO SUCCESS/FAILURE PAGE
@@ -220,6 +237,14 @@ class _AddItemPageState extends State<AddItemPage> {
                   errorText: _itemQuantityError,
                 ),
                 keyboardType: TextInputType.number,
+              ),
+              SizedBox(height: 8.0),
+              TextField(
+                onChanged: (value) => itemDescription = value,
+                decoration: InputDecoration(
+                  labelText: 'Deskripsi',
+                  errorText: _itemDescriptionError,
+                ),
               ),
               SizedBox(height: 8.0),
               ElevatedButton.icon(

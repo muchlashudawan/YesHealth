@@ -2,12 +2,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:window_size/window_size.dart';
+import 'package:simple_animations/simple_animations.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 import 'dart:io';
 
 import 'customer_pages/home.dart';
 import 'customer_pages/cart.dart';
 import 'customer_pages/profile.dart';
 import 'login/login.dart';
+import 'usersAndItemsModel.dart';
+import 'databaseHelper.dart';
 import 'usersAndItemsModel.dart';
 
 void main() {
@@ -20,7 +25,7 @@ void main() {
           Rect.fromCenter(center: Offset(1000, 500), width: 600, height: 1000));
     });
   }
-  runApp(  
+  runApp(
     ChangeNotifierProvider(
       create: (context) => UserData(),
       child: MyApp(),
@@ -65,7 +70,8 @@ class _MyAppState extends State<MyMainApp> {
     super.initState();
     _pages = [
       CartMenu(
-          user: Provider.of<UserData>(context, listen: false).loggedInUser as User),
+          user: Provider.of<UserData>(context, listen: false).loggedInUser
+              as User),
       HomePage(),
       Profile(),
     ];
@@ -90,7 +96,7 @@ class _MyAppState extends State<MyMainApp> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(60.0), // Adjust the height as needed
           child: AppBar(
-            backgroundColor: Colors.lightBlue,
+            backgroundColor: HexColor("147158"),
             elevation: 0.0,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,18 +113,12 @@ class _MyAppState extends State<MyMainApp> {
                     IconButton(
                       icon: Icon(Icons.favorite),
                       onPressed: () {
-                        // Handle click on heart icon
-                        print("Heart icon clicked");
-                        // Open bottom sheet
                         _showBottomSheet(context, Wishlist());
                       },
                     ),
                     IconButton(
                       icon: Icon(Icons.notifications_sharp),
                       onPressed: () {
-                        // Handle click on notification icon
-                        print("Notification icon clicked");
-                        // Open bottom sheet
                         _showBottomSheet(context, NotificationPage());
                       },
                     ),
@@ -141,7 +141,7 @@ class _MyAppState extends State<MyMainApp> {
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.shopping_cart_rounded),
-              label: "Cart",
+              label: "Keranjang",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -149,11 +149,11 @@ class _MyAppState extends State<MyMainApp> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
-              label: "Profile",
+              label: "Profil",
             ),
           ],
           currentIndex: _currentIndex,
-          selectedItemColor: Colors.lightBlue,
+          selectedItemColor: HexColor("6AB29B"),
           backgroundColor: Color.fromARGB(255, 236, 236, 236),
           onTap: onItemTapped,
         ),
@@ -178,12 +178,111 @@ class _MyAppState extends State<MyMainApp> {
 class Wishlist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    NumberFormat numberFormat = NumberFormat.decimalPattern('id');
+    User loggedInUser = Provider.of<UserData>(context).loggedInUser! as User;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Wishlist'),
       ),
-      body: Center(
-        child: Text('Content of the Wishlist goes here...'),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        // Fetch the wishlist items from the database
+        future: UserHomeDatabaseHelper().getWishlist(loggedInUser.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error loading wishlist'),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Text('Wishlist Kamu Kosong.'),
+            );
+          } else {
+            // Build the wishlist items list using a ListView.builder
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      Map<String, dynamic> wishlistItem = snapshot.data![index];
+
+                      // Build each wishlist item as a Dismissible widget
+                      return Dismissible(
+                        key: Key(wishlistItem['id'].toString()),
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                          color: Colors.red,
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        onDismissed: (direction) {
+                          // Handle item removal from wishlist
+                          UserHomeDatabaseHelper().removeFromWishlist(
+                            loggedInUser.id,
+                            wishlistItem['itemName'],
+                            wishlistItem['imagePath'],
+                          );
+                        },
+                        child: Card(
+                          elevation: 4,
+                          margin: EdgeInsets.all(8),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Item name and type (top left)
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Item name (left top bold)
+                                      Text(
+                                        wishlistItem['itemName'],
+                                        style: TextStyle(
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // Item image on the right
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: Image.file(
+                                    File(wishlistItem['imagePath']),
+                                    height: 80,
+                                    width: 80,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
   }
@@ -192,13 +291,87 @@ class Wishlist extends StatelessWidget {
 class NotificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    NumberFormat numberFormat = NumberFormat.decimalPattern('id');
+    User loggedInUser = Provider.of<UserData>(context).loggedInUser! as User;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notification Page'),
+        title: Text('Notifikasi'),
       ),
-      body: Center(
-        child: Text('Content of the Notification Page goes here...'),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        // Fetch the notifications from the database
+        future: UserHomeDatabaseHelper().getNotifications(loggedInUser.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error loading notifications'),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Text('Kamu Tidak Mempunyai Notifikasi.'),
+            );
+          } else {
+            // Build the notifications list using a ListView.builder
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                Map<String, dynamic> notificationItem = snapshot.data![index];
+
+                // Get the icon data from the database
+                String? iconData = notificationItem['icon'];
+
+                // Build each notification item as a Dismissible widget
+                return Dismissible(
+                  key: Key(notificationItem['id'].toString()),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    color: Colors.red,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  onDismissed: (direction) {
+                    UserHomeDatabaseHelper().removeNotification(
+                      loggedInUser.id,
+                      notificationItem['id'],
+                    );
+                  },
+                  child: ListTile(
+                    leading: _buildIconFromData(notificationItem['icon'] ?? "failed"),
+                    title: Text(notificationItem['title'] ?? "Placeholder"),
+                    subtitle: Text(notificationItem['message'] ?? "Placeholder"),
+                  ),
+                );
+              },
+            );
+          }
+        },
       ),
     );
+  }
+
+  // Helper method to build Icon from icon data
+  Widget _buildIconFromData(String? iconData) {
+    // Use a default icon (e.g., notification icon) if the iconData is not available
+    Icon icon = Icon(Icons.abc);
+
+    if (iconData == 'success') {
+      icon = Icon(Icons.check_circle, color: Colors.green);
+    } else if (iconData == 'failed') {
+      icon = Icon(Icons.error, color: Colors.red);
+    }
+
+    return icon;
   }
 }
