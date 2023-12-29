@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shimmer/shimmer.dart';
 import '../databaseHelper.dart';
 import '../usersAndItemsModel.dart';
 import '../login/login.dart';
@@ -14,14 +15,26 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
   String? _bannerImagePath;
   String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
     _loadBanner();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   Future<void> _loadBanner() async {
@@ -39,7 +52,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Stack(
         children: [
-          // White box behind the navbar
           Container(
             height: 130,
             decoration: BoxDecoration(
@@ -48,7 +60,7 @@ class _HomePageState extends State<HomePage> {
                 end: Alignment.bottomCenter,
                 colors: [
                   HexColor("147158"),
-                  HexColor("147158").withOpacity(0.0), // Fade to transparent
+                  HexColor("147158").withOpacity(0.0),
                 ],
               ),
               borderRadius: BorderRadius.only(
@@ -57,15 +69,11 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-
-          // Home page content
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
             child: ListView(
               children: [
-                SizedBox(height: 10), // Add space below the app bar
-
-                // Swipeable banner section
+                SizedBox(height: 10),
                 IgnorePointer(
                   child: Container(
                     height: 170,
@@ -77,52 +85,36 @@ class _HomePageState extends State<HomePage> {
                                   BorderRadius.all(Radius.circular(5)),
                               image: DecorationImage(
                                 image: FileImage(File(_bannerImagePath!)),
-                                fit: BoxFit
-                                    .fill, // Ensure the image covers the entire container
+                                fit: BoxFit.fill,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black
-                                      .withOpacity(0.4), // Light black shadow
+                                  color: Colors.black.withOpacity(0.4),
                                   spreadRadius: 2,
                                   blurRadius: 5,
                                   offset: Offset(0, 3),
                                 ),
                               ],
                               border: Border.all(
-                                color: Colors.black
-                                    .withOpacity(0.1), // Light black outline
+                                color: Colors.black.withOpacity(0.1),
                                 width: 1,
                               ),
                             ),
                           )
-                        : PageView.builder(
-                            itemCount: 3,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                width: 120,
-                                decoration: BoxDecoration(
-                                  color: HexColor("6AB29B"),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(
-                                          0.4), // Light black shadow
-                                      spreadRadius: 2,
-                                      blurRadius: 5,
-                                      offset: Offset(0, 3),
-                                    ),
-                                  ],
-                                ),
-                                // Add the content of each banner here
-                              );
-                            },
+                        : Shimmer.fromColors(
+                            // Shimmer effect for loading state
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                              ),
+                            ),
                           ),
                   ),
                 ),
-
-                // Search box
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 15),
                   decoration: BoxDecoration(
@@ -161,19 +153,38 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SizedBox(height: 24),
-
-                // Dynamic category-wise item display
                 FutureBuilder<Map<String, List<Item>>>(
                   future: ItemDatabaseHelper().getItemsByCategory(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          height: 300, // Adjust the height based on your design
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 3,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                width: 120,
+                                decoration: BoxDecoration(
+                                  color: HexColor("6AB29B"),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                ),
+                                // Add the content of each banner here
+                              );
+                            },
+                          ),
+                        ),
+                      );
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return Center(
                         child: Text(
-                          'Tidak ada barang yang sedang dijual, kembali lagi nanti!',
+                          'No items currently on sale, please check back later!',
                           style: TextStyle(fontSize: 16),
                         ),
                       );
@@ -220,7 +231,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Container(
-            // Remove the fixed height here
             margin: EdgeInsets.only(bottom: 16),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,

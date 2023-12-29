@@ -127,6 +127,15 @@ class UserHomeDatabaseHelper {
     }
   }
 
+  Future<void> removeFromCartNoBack(int userId, int cartItemId) async {
+    try {
+      // Remove the item from the cart
+      await _removeFromCartNoBackDatabase(userId, cartItemId);
+    } catch (e) {
+      print('Error removing from cart: $e');
+    }
+  }
+
   Future<void> _addToCartDatabase(int userId, String itemName, int quantity,
       int price, String imagePath) async {
     final db = await database;
@@ -152,6 +161,15 @@ class UserHomeDatabaseHelper {
     // Add the item back to stock (assuming you have a method for this)
     ItemDatabaseHelper()
         .updateItemQuantity(cartItem.name, cartItem.quantity, "return");
+  }
+
+  Future<void> _removeFromCartNoBackDatabase(int userId, int cartItemId) async {
+    final db = await database;
+    print("Removed Item ${cartItemId} from cart. No Back");
+
+    // Remove the item from the cart
+    await db.delete('user_cart',
+        where: 'userId = ? AND id = ?', whereArgs: [userId, cartItemId]);
   }
 
   Future<void> updateItemQuantity(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'dart:io';
 import 'dart:math';
 import '../login/login.dart';
@@ -275,6 +276,11 @@ class _CartMenuState extends State<CartMenu> {
                     notificationAdded = true;
                   }
 
+                  for (var item in selectedItems) {
+                    UserHomeDatabaseHelper().removeFromCartNoBack(widget.user.id, item.id!);
+                  }
+
+                  _loadCart();
                   return AlertDialog(
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -291,22 +297,22 @@ class _CartMenuState extends State<CartMenu> {
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: Text("OK"),
+                        child: Text("Tutup", style: TextStyle(color: HexColor("186049"))),
                       ),
                     ],
                   );
+
                 } else {
                   return AlertDialog(
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        CircularProgressIndicator(),
-                        SizedBox(height: 16),
+                        CircularProgressIndicator(color: Colors.green),
+                        SizedBox(height: 24),
                         Text("Sedang Melakukan Pembayaran",
                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                         SizedBox(height: 16),
-                        Text("Mohon Tunggu Sebentar",
-                            style: TextStyle(fontWeight: FontWeight.normal)),
+                        Text("Mohon Tunggu Sebentar", style: TextStyle(fontWeight: FontWeight.normal)),
                       ],
                     ),
                   );

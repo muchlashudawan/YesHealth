@@ -28,11 +28,37 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? _errorMessage; // Added to store error message
   int clickCount = 0;
+
+  late AnimationController controller;
+  late Animation<Offset> translateAnimation;
+  
+  
+  @override
+  void initState() {
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+    translateAnimation =
+        Tween<Offset>(begin: const Offset(0, -1.5), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Curves.decelerate,
+      ),
+    );
+    controller.forward();
+    super.initState();
+  }
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   void _login(BuildContext context) async {
     var userData = Provider.of<UserData>(context, listen: false);

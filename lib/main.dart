@@ -33,22 +33,67 @@ void main() {
   );
 }
 
+class SplashScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // Your splash screen content
+    return _buildSplashScreen();
+  }
+
+  Widget _buildSplashScreen() {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Your logo or splash screen image
+            Image.asset(
+              'assets/logo_512.png',
+              width: 200,
+              height: 200,
+            ),
+            Text(
+              "YesHealth",
+              style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: HexColor("147158")),
+            ),
+            SizedBox(height: 20),
+            // Loading indicator or any other content
+            CircularProgressIndicator(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => UserData(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Consumer<UserData>(
-          builder: (context, userData, _) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: FutureBuilder(
+        // Simulate asynchronous loading (e.g., fetching user data)
+        future: Future.delayed(Duration(seconds: 4)),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // While data is loading, show the splash screen
+            return SplashScreen();
+          } else {
+            // Once data is loaded, decide whether to show login or main app
+            final userData = Provider.of<UserData>(context);
             if (userData.isLoggedIn) {
+              // Use MaterialPageRoute with builder for the fade-out effect
               return MyMainApp();
             } else {
+              // Use MaterialPageRoute with builder for the fade-out effect
               return LoginPage();
             }
-          },
-        ),
+          }
+        },
       ),
     );
   }
