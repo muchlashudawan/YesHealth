@@ -81,9 +81,9 @@ flutter run
 
 ## Authors
 
-- [Muchlas](https://www.github.com/Muchlas04) (Programmer)
-- [DevanAditiya](https://www.github.com/adwerygaming) (UI/UX)
+- [Muchlas](https://www.github.com/Muchlas04) (UI/UX)
 - [resmaynt](https://github.com/resmaynt) (UI/UX)
+- [DevanAditiya](https://www.github.com/adwerygaming) (Programmer) 
 
 ## License
 
