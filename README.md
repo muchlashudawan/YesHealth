@@ -12,7 +12,7 @@
 ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
 [![wakatime](https://wakatime.com/badge/user/eb2a6d85-76a2-41b2-a9c5-7b42d3f0fbe2/project/018ca0f9-454a-455a-94fb-b86c74cd4a80.svg?style=for-the-badge)](https://wakatime.com/badge/user/eb2a6d85-76a2-41b2-a9c5-7b42d3f0fbe2/project/018ca0f9-454a-455a-94fb-b86c74cd4a80)
-
+[![wakatime](https://wakatime.com/badge/github/adwerygaming/YesHealth.svg?style=for-the-badge)](https://wakatime.com/badge/github/adwerygaming/YesHealth)
 </div>
 
 ## Screenshots
