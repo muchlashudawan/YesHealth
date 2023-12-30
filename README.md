@@ -19,7 +19,7 @@
 
 <div align="center">
   
-![android_cart](https://github.com/adwerygaming/YesHealth/assets/50104357/a1182699-c718-4fdf-883c-1864152d3ea2)  
+![android_cart](https://github.com/adwerygaming/YesHealth/assets/50104357/a1182699-c718-4fdf-883c-1864152d3ea2)
 ![android_home](https://github.com/adwerygaming/YesHealth/assets/50104357/e1f62a27-7d16-491f-8448-ed62db383994)
 ![android_profile](https://github.com/adwerygaming/YesHealth/assets/50104357/8957a98a-ac7d-4801-84df-207876cde5cf)
 
