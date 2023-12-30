@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import '../databaseHelper.dart';
 import '../usersAndItemsModel.dart';
-import './itemRedirect.dart';
+import 'itemRedirect.dart';
+import 'itemTypes.dart';
 
 class AddItemPage extends StatefulWidget {
   @override
@@ -39,9 +41,24 @@ class _AddItemPageState extends State<AddItemPage> {
   }
 
   final ItemDatabaseHelper _databaseHelper = ItemDatabaseHelper();
+  final ItemTypeDatabaseHelper _itemTypeDatabaseHelper =
+      ItemTypeDatabaseHelper();
+
+  Future<List<String>> _fetchItemTypes() async {
+    try {
+      final List<TypeItem> itemTypes =
+          await _itemTypeDatabaseHelper.getItemTypes();
+      final List<String> uniqueItemTypes =
+          itemTypes.map((type) => type.type).toList();
+      return uniqueItemTypes;
+    } catch (error) {
+      print('Error fetching item types: $error');
+      return [];
+    }
+  }
 
   void _sumbitItem() async {
-    // ITEM NAME VALIDATION
+// ITEM NAME VALIDATION
     if (itemName.isEmpty) {
       setState(() {
         _itemNameError = "Nama Obat Tidak Boleh Kosong";
@@ -130,11 +147,12 @@ class _AddItemPageState extends State<AddItemPage> {
       return;
     }
 
-     // ITEM DESCRIPTION VALIDATION
+    // ITEM DESCRIPTION VALIDATION
     if (itemDescription.isEmpty) {
       setState(() {
         _itemDescriptionError = null;
-        itemDescription = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ullamcorper nibh felis, vitae tincidunt nibh consectetur ac. Nunc quis lacus iaculis, dictum velit mattis, tincidunt arcu. Donec placerat quis tortor vel sodales. Nunc congue condimentum maximus. Donec dictum eleifend est id aliquam. Vestibulum dolor ipsum, imperdiet in lectus sed, congue tincidunt felis. Proin eu est sed magna porta tempor id sit amet felis. Proin semper dictum massa, ut eleifend dui luctus quis.";
+        itemDescription =
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ullamcorper nibh felis, vitae tincidunt nibh consectetur ac. Nunc quis lacus iaculis, dictum velit mattis, tincidunt arcu. Donec placerat quis tortor vel sodales. Nunc congue condimentum maximus. Donec dictum eleifend est id aliquam. Vestibulum dolor ipsum, imperdiet in lectus sed, congue tincidunt felis. Proin eu est sed magna porta tempor id sit amet felis. Proin semper dictum massa, ut eleifend dui luctus quis.";
       });
       return;
     } else {
@@ -213,12 +231,70 @@ class _AddItemPageState extends State<AddItemPage> {
                 ),
               ),
               SizedBox(height: 8.0),
-              TextField(
-                onChanged: (value) => itemType = value,
-                decoration: InputDecoration(
-                  labelText: 'Tipe Obat',
-                  errorText: _itemTypeError,
-                ),
+              FutureBuilder<List<String>>(
+                future: _fetchItemTypes(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+
+                  if (snapshot.hasError) {
+                    return Text('Error loading item types');
+                  }
+
+                  final List<String> itemTypes = snapshot.data ?? [];
+
+                  return DropdownButton2<String>(
+                    isExpanded: true,
+                    hint: Text(
+                      'Pilih Tipe Obat',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).hintColor,
+                      ),
+                    ),
+                    items: [
+                      if (itemTypes.isEmpty)
+                        DropdownMenuItem<String>(
+                          value: 'Buat Baru',
+                          child: Text(
+                            'Buat Baru',
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ...itemTypes
+                          .map((String item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 0.0), // Adjust the left padding
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              )),
+                    ],
+                    value: itemType.isNotEmpty ? itemType : null,
+                    onChanged: (String? value) {
+                      setState(() {
+                        if (value == 'Buat Baru') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditItemTypePage()),
+                          );
+                        } else {
+                          itemType = value ?? '';
+                        }
+                      });
+                    },
+                  );
+                },
               ),
               SizedBox(height: 8.0),
               TextField(
@@ -253,7 +329,10 @@ class _AddItemPageState extends State<AddItemPage> {
                   _onImageSubmitted();
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(isImageSubmitted ? Color.fromARGB(255, 105, 208, 255) : Colors.blue),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      isImageSubmitted
+                          ? Color.fromARGB(255, 105, 208, 255)
+                          : Colors.blue),
                   minimumSize: MaterialStateProperty.all<Size>(Size(200, 50)),
                 ),
                 icon: Icon(Icons.photo_library),

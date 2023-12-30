@@ -3,13 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'redirectRegisterAccount.dart';
 import '../databaseHelper.dart';
 import '../usersAndItemsModel.dart';
 
-const List<String> genderList = <String>['Laki-Laki', 'Perempuan'];
-
+final List<String> genderList = [
+  'Laki-Laki',
+  'Perempuan',
+];
+String? selectedValue;
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -38,6 +42,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String? _tanggalLahirError;
   String? _genderError;
   String? _noTelpError;
+
+  bool _isPasswordVisible = false;
 
   Widget _buildTextField({
     required String label,
@@ -72,6 +78,39 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
+  Widget _buildPasswordTextField({
+    required String label,
+    required TextEditingController controller,
+    String? errorText,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: !_isPasswordVisible,
+      decoration: InputDecoration(
+        labelText: label,
+        errorText: errorText,
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: HexColor("304D30")),
+        ),
+        labelStyle: TextStyle(color: HexColor("304D30")),
+        focusedErrorBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.red),
+        ),
+        suffixIcon: IconButton(
+          onPressed: () {
+            setState(() {
+              _isPasswordVisible = !_isPasswordVisible;
+            });
+          },
+          icon: Icon(
+            _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+            color: HexColor("304D30"),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildIntlPhoneField({
     required String label,
     required TextEditingController controller,
@@ -94,31 +133,35 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   Widget _buildDropdownButtonFormField() {
-    return DropdownButtonFormField<String>(
-      value: dropdownValue,
-      decoration: InputDecoration(
-        errorText: _genderError,
-        focusedErrorBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
+    return DropdownButton2<String>(
+      isExpanded: false,
+      hint: Text(
+        'Pilih',
+        style: TextStyle(
+          fontSize: 14,
+          color: Theme.of(context).hintColor,
         ),
       ),
+      items: genderList
+          .map((String item) => DropdownMenuItem<String>(
+                value: item,
+                child: Text(
+                  item,
+                  style: const TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ))
+          .toList(),
+      value: selectedValue,
       onChanged: (String? value) {
-        // This is called when the user selects an item.
         setState(() {
-          dropdownValue = value!;
-          _genderController.text = value;
+          selectedValue = value;
+          _genderController.text = value ?? "Unknown";
         });
       },
-      items: genderList.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
     );
   }
-
-
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -137,23 +180,47 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
   }
 
+  int calculateAge(String birthDateString) {
+    if (birthDateString == null || birthDateString.isEmpty) {
+      return 0;
+    }
+    // Parse the birth date
+    DateTime birthDate = DateTime.parse(birthDateString);
+
+    // Get the current date
+    DateTime currentDate = DateTime.now();
+
+    // Calculate the age
+    int age = currentDate.year - birthDate.year;
+
+    // Adjust the age based on the month and day
+    if (currentDate.month < birthDate.month ||
+        (currentDate.month == birthDate.month &&
+            currentDate.day < birthDate.day)) {
+      age--;
+    }
+
+    return age;
+  }
+
   void _registerUser() async {
     String username = _usernameController.text.trim();
     String password = _passwordController.text.trim();
     String email = _emailController.text.trim();
     String nama = _namaController.text.trim();
     String alamat = _alamatController.text.trim();
-    String umur = _umurController.text.trim();
     String tanggalLahir = _tanggalLahirController.text.trim();
     String gender = _genderController.text.trim();
     String nomorTelpon = _noTelpController.text.trim();
+
+    int umur = calculateAge(tanggalLahir);
 
     print("Username: " + username);
     print("Password: " + password);
     print("Email: " + email);
     print("Name: " + nama);
     print("alamat: " + alamat);
-    print("Umur: " + umur);
+    print("Umur: " + umur.toString());
     print("Tgl. Lahir: " + tanggalLahir);
     print("Gender: " + gender);
     print("noTelp: " + nomorTelpon);
@@ -243,7 +310,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     }
 
     // UMUR VALIDATION
-    if (int.parse(umur) <= 0) {
+    if (umur <= 0) {
       setState(() {
         _umurError = "Umur Tidak Boleh Kurang Atau Sama Dengan Nol.";
       });
@@ -340,7 +407,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       password: password,
       email: email,
       namaLengkap: nama,
-      umur: int.parse(umur),
+      umur: umur,
       alamat: alamat,
       tanggalLahir: tanggalLahir,
       nomorTelpon: int.parse(nomorTelpon),
@@ -360,7 +427,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
     });
   }
 
-  String dropdownValue = 'Laki-Laki'; // Set a default value
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -387,7 +453,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     const Text("Informasi Akun YesHealth", textScaleFactor: 1),
                 color: Colors.black,
               ),
-              SizedBox(height: 8.0),
+              SizedBox(height: 16.0),
               _buildTextField(
                 label: 'Username',
                 controller: _usernameController,
@@ -400,33 +466,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 errorText: _emailError,
               ),
               SizedBox(height: 8.0),
-              _buildTextField(
+              _buildPasswordTextField(
                 label: 'Password',
                 controller: _passwordController,
                 errorText: _passwordError,
-                obscureText: true,
               ),
               SizedBox(height: 16.0),
               Title(
                 child: const Text("Data Diri Anda", textScaleFactor: 1),
                 color: Colors.black,
               ),
-              SizedBox(height: 8.0),
+              SizedBox(height: 16.0),
               _buildTextField(
                 label: 'Nama Lengkap',
                 controller: _namaController,
                 errorText: _namaError,
                 maxLength: 64,
-              ),
-              _buildTextField(
-                label: 'Umur',
-                controller: _umurController,
-                errorText: _umurError,
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                maxLength: 3,
               ),
               _buildTextField(
                 label: 'Alamat',
@@ -455,15 +510,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
               ),
               SizedBox(height: 16.0),
-               ElevatedButton(
+              ElevatedButton(
                 onPressed: _registerUser,
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(HexColor("6AB29B")),
-                  minimumSize: MaterialStateProperty.all<Size>(Size(200, 50)), // Adjust the size as needed
-
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(HexColor("6AB29B")),
+                  minimumSize: MaterialStateProperty.all<Size>(
+                      Size(200, 50)), // Adjust the size as needed
                 ),
-                child: Text('Buat Akun',
-                    style: TextStyle(color: Colors.white)),
+                child: Text('Buat Akun', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -472,4 +527,3 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 }
-

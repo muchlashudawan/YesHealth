@@ -211,7 +211,7 @@ class _CartMenuState extends State<CartMenu> {
               children: [
                 Text(itemList),
                 Text(
-                    "Semua Obat Ini Bernilai Rp. ${numberFormat.format(totalPriceAllItem)}."),
+                    "Harga Semua Total Obat Rp. ${numberFormat.format(totalPriceAllItem)}."),
               ],
             ),
             actions: [
@@ -225,7 +225,7 @@ class _CartMenuState extends State<CartMenu> {
                 onPressed: () {
                   Navigator.of(context).pop(true); // "Gas, Bayar!"
                 },
-                child: Text("Gas, Bayar!"),
+                child: Text("Bayar"),
               ),
             ],
           );

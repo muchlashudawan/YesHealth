@@ -45,7 +45,6 @@ class _ViewItemPageState extends State<ViewItemPage> {
   @override
   void initState() {
     super.initState();
-    // Trigger the automatic refresh when the screen is loaded
     _refreshItems();
   }
 
@@ -55,12 +54,6 @@ class _ViewItemPageState extends State<ViewItemPage> {
       appBar: AppBar(
         title: Text('Lihat Obat'),
         backgroundColor: Colors.black,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: _refreshItems,
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

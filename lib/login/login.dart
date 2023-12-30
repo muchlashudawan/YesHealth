@@ -28,16 +28,22 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
+class _LoginPageState extends State<LoginPage>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String? _errorMessage; // Added to store error message
+  bool _isPasswordVisible = false;
+  late FocusNode _passwordFocusNode;
+  String? _errorMessage;
   int clickCount = 0;
 
   late AnimationController controller;
   late Animation<Offset> translateAnimation;
-  
-  
+
+  _LoginPageState() {
+      _passwordFocusNode = FocusNode();
+  }
+
   @override
   void initState() {
     controller = AnimationController(
@@ -54,9 +60,11 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     controller.forward();
     super.initState();
   }
+
   @override
   void dispose() {
     controller.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -180,53 +188,65 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
           Center(
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(20.0), 
+                padding: const EdgeInsets.all(20.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min, // Ensures minimum height, avoiding unnecessary scrolling
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Title(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            clickCount++;
-                          });
-                        },
-                        child: Text(
-                          "Selamat Datang",
-                          textScaleFactor: 2,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: HexColor("147158"),
+                    Container(
+                      width: double.infinity,
+                      child: Title(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              clickCount++;
+                            });
+                          },
+                          child: Text(
+                            "Selamat Datang",
+                            textScaleFactor: 2,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: HexColor("147158"),
+                            ),
+                            textAlign: TextAlign.center
                           ),
                         ),
+                        color: HexColor("147158"),
                       ),
-                      color: HexColor("147158"),
                     ),
-                    Title(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            clickCount = 0;
-                          });
-                        },
-                        child: Text(
-                          "Silahkan Login Untuk Mengakses YesHealth",
-                          textScaleFactor: 1.2,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: HexColor("147158"),
+                    Container(
+                      width: double.infinity,
+                      child: Title(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              clickCount = 0;
+                            });
+                          },
+                          child: Text(
+                            "Silahkan Login Untuk Mengakses YesHealth",
+                            textScaleFactor: 1.2,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: HexColor("147158"),
+                            ),
+                            textAlign: TextAlign.center
                           ),
                         ),
+                        color: HexColor("147158"),
                       ),
-                      color: HexColor("147158"),
                     ),
                     if (_errorMessage != null) ...[
                       SizedBox(height: 15.0),
-                      Text(
-                        _errorMessage!,
-                        style: TextStyle(color: Colors.red),
+                      Container(
+                        width: double.infinity,
+                        child: Text(
+                          _errorMessage!,
+                          style: TextStyle(color: Colors.red),
+                          textAlign: TextAlign.center
+                        ),
                       ),
                     ],
                     SizedBox(height: 16.0),
@@ -247,14 +267,28 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                     Container(
                       width: 300,
                       child: TextField(
-                        obscureText: true,
                         controller: _passwordController,
+                        obscureText: !_isPasswordVisible,
+                        focusNode: _passwordFocusNode,
                         decoration: InputDecoration(
                           labelText: 'Password',
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: HexColor("147158")),
                           ),
                           labelStyle: TextStyle(color: HexColor("147158")),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: HexColor("147158"),
+                            ),
+                          ),
                         ),
                       ),
                     ),

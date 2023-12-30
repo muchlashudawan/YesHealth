@@ -55,12 +55,6 @@ class _EditItemPageState extends State<EditItemPage> {
       appBar: AppBar(
         title: Text('Ubah Obat'),
         backgroundColor: Colors.black,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: _refreshItems,
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

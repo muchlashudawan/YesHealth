@@ -158,6 +158,34 @@ class Item {
   }
 }
 
+class TypeItem {
+  int? id;
+  String type;
+
+  TypeItem({
+    this.id,
+    required this.type,
+  });
+
+  TypeItem copyWith({
+    int? id,
+    String? type,
+  }) {
+    return TypeItem(
+      id: id ?? this.id,
+      type: type ?? this.type,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'type': type,
+    };
+  }
+}
+
+
 class CartItem {
   int? id;
   String name;

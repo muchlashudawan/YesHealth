@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:window_size/window_size.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
+import 'dart:async';
 
 import 'customer_pages/home.dart';
 import 'customer_pages/cart.dart';
@@ -18,12 +20,12 @@ import 'usersAndItemsModel.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isWindows) {
-    setWindowMaxSize(const Size(1024, 768));
-    setWindowMinSize(const Size(512, 384));
-    Future<Null>.delayed(Duration(seconds: 1), () {
-      setWindowFrame(
-          Rect.fromCenter(center: Offset(1000, 500), width: 600, height: 1000));
-    });
+    // setWindowMaxSize(const Size(1024, 768));
+    // setWindowMinSize(const Size(512, 384));
+    // Future<Null>.delayed(Duration(seconds: 1), () {
+    //   setWindowFrame(
+    //       Rect.fromCenter(center: Offset(1000, 500), width: 600, height: 1000));
+    // });
   }
   runApp(
     ChangeNotifierProvider(
@@ -61,14 +63,13 @@ class SplashScreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
             // Loading indicator or any other content
-            CircularProgressIndicator(),
+            CircularProgressIndicator(color: Colors.green),
           ],
         ),
       ),
     );
   }
 }
-
 
 class MyApp extends StatelessWidget {
   @override
@@ -141,37 +142,38 @@ class _MyAppState extends State<MyMainApp> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(60.0), // Adjust the height as needed
           child: AppBar(
-            backgroundColor: HexColor("147158"),
-            elevation: 0.0,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'YesHealth',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.favorite),
-                      onPressed: () {
-                        _showBottomSheet(context, Wishlist());
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.notifications_sharp),
-                      onPressed: () {
-                        _showBottomSheet(context, NotificationPage());
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
+  backgroundColor: HexColor("147158"),
+  elevation: 0.0,
+  title: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(
+        'YesHealth',
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.favorite),
+            onPressed: () {
+              _showBottomSheet(context, Wishlist());
+            },
           ),
+          IconButton(
+            icon: Icon(Icons.notifications_sharp),
+            onPressed: () {
+              _showBottomSheet(context, NotificationPage());
+            },
+          ),
+        ],
+      ),
+    ],
+  ),
+),
+
         ),
         body: PageView(
           controller: _pageController,
@@ -219,7 +221,6 @@ class _MyAppState extends State<MyMainApp> {
     );
   }
 }
-
 class Wishlist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -227,9 +228,6 @@ class Wishlist extends StatelessWidget {
     User loggedInUser = Provider.of<UserData>(context).loggedInUser! as User;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Wishlist'),
-      ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         // Fetch the wishlist items from the database
         future: UserHomeDatabaseHelper().getWishlist(loggedInUser.id),
@@ -292,8 +290,7 @@ class Wishlist extends StatelessWidget {
                                 // Item name and type (top left)
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       // Item name (left top bold)
                                       Text(
@@ -340,9 +337,6 @@ class NotificationPage extends StatelessWidget {
     User loggedInUser = Provider.of<UserData>(context).loggedInUser! as User;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Notifikasi'),
-      ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         // Fetch the notifications from the database
         future: UserHomeDatabaseHelper().getNotifications(loggedInUser.id),
@@ -369,33 +363,37 @@ class NotificationPage extends StatelessWidget {
                 // Get the icon data from the database
                 String? iconData = notificationItem['icon'];
 
-                // Build each notification item as a Dismissible widget
-                return Dismissible(
-                  key: Key(notificationItem['id'].toString()),
-                  direction: DismissDirection.endToStart,
-                  background: Container(
-                    color: Colors.red,
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 16.0),
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.white,
+                // Build each notification item as a Dismissible widget wrapped in a Container
+                return Container(
+                  margin: EdgeInsets.all(8), // Add margin to create spacing
+                  child: Dismissible(
+                    key: Key(notificationItem['id'].toString()),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      color: Colors.red,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  onDismissed: (direction) {
-                    UserHomeDatabaseHelper().removeNotification(
-                      loggedInUser.id,
-                      notificationItem['id'],
-                    );
-                  },
-                  child: ListTile(
-                    leading: _buildIconFromData(notificationItem['icon'] ?? "failed"),
-                    title: Text(notificationItem['title'] ?? "Placeholder"),
-                    subtitle: Text(notificationItem['message'] ?? "Placeholder"),
+                    onDismissed: (direction) {
+                      UserHomeDatabaseHelper().removeNotification(
+                        loggedInUser.id,
+                        notificationItem['id'],
+                      );
+                    },
+                    child: ListTile(
+                      leading: _buildIconFromData(
+                          notificationItem['icon'] ?? "failed"),
+                      title: Text(notificationItem['title'] ?? "Placeholder"),
+                      subtitle: Text(notificationItem['message'] ?? "Placeholder"),
+                    ),
                   ),
                 );
               },
@@ -412,9 +410,9 @@ class NotificationPage extends StatelessWidget {
     Icon icon = Icon(Icons.abc);
 
     if (iconData == 'success') {
-      icon = Icon(Icons.check_circle, color: Colors.green);
+      icon = Icon(Icons.check_circle, color: Colors.green, size: 40);
     } else if (iconData == 'failed') {
-      icon = Icon(Icons.error, color: Colors.red);
+      icon = Icon(Icons.error, color: Colors.red, size: 40);
     }
 
     return icon;

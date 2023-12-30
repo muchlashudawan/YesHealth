@@ -738,6 +738,97 @@ class ItemDatabaseHelper {
   }
 }
 
+class ItemTypeDatabaseHelper {
+  static final ItemTypeDatabaseHelper _instance = ItemTypeDatabaseHelper._internal();
+
+  factory ItemTypeDatabaseHelper() {
+    return _instance;
+  }
+
+  ItemTypeDatabaseHelper._internal();
+
+  late Database _database;
+
+  Future<Database> get database async {
+    _database = await initDatabase();
+    return _database;
+  }
+
+  Future<Database> initDatabase() async {
+    if (Platform.isWindows || Platform.isLinux) {
+      databaseFactoryOrNull = null;
+      sqfliteFfiInit();
+      databaseFactory = databaseFactoryFfi;
+    }
+
+    final path = join(await getDatabasesPath(), 'item_type_database.db');
+
+    return openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) async {
+        await db.execute('''
+          CREATE TABLE item_types(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            type TEXT
+          )
+        ''');
+      },
+    );
+  }
+
+  Future<int> addItemType(String type) async {
+    try {
+      final db = await database;
+      return await db.insert('item_types', {'type': type});
+    } catch (e) {
+      print('Error adding item type: $e');
+      rethrow;
+    }
+  }
+
+  Future<int> updateItemType(int id, String newType) async {
+    try {
+      final db = await database;
+      return await db.update(
+        'item_types',
+        {'type': newType},
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+    } catch (e) {
+      print('Error updating item type: $e');
+      rethrow;
+    }
+  }
+
+  Future<int> deleteItemType(int id) async {
+    try {
+      final db = await database;
+      return await db.delete('item_types', where: 'id = ?', whereArgs: [id]);
+    } catch (e) {
+      print('Error deleting item type: $e');
+      rethrow;
+    }
+  }
+
+  Future<List<TypeItem>> getItemTypes() async {
+    try {
+      final db = await database;
+      final List<Map<String, dynamic>> maps = await db.query('item_types');
+
+      return List.generate(maps.length, (index) {
+        return TypeItem(
+          id: maps[index]['id'],
+          type: maps[index]['type'],
+        );
+      });
+    } catch (e) {
+      print('Error getting item types: $e');
+      rethrow;
+    }
+  }
+}
 class BannerDatabaseHelper {
   static final BannerDatabaseHelper _instance =
       BannerDatabaseHelper._internal();

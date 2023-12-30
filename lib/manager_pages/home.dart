@@ -8,6 +8,7 @@ import 'itemAdd.dart';
 import 'itemEdit.dart';
 import 'itemDelete.dart';
 import 'itemView.dart';
+import 'itemTypes.dart';
 import 'changeBanner.dart';
 
 class HomeManagerPage extends StatefulWidget {
@@ -216,6 +217,16 @@ void _showBottomSheet(BuildContext context) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => DeleteItemPage()),
+                );
+              },
+            ),
+            _buildBottomSheetButton(
+              icon: Icons.abc,
+              label: 'Tipe Obat',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EditItemTypePage()),
                 );
               },
             ),

@@ -17,15 +17,23 @@ class RedirectRegisterPage extends StatelessWidget {
             status == "success"
                 ? Icon(Icons.check_circle, color: Colors.green, size: 100)
                 : Icon(Icons.error, color: Colors.red, size: 100),
-            Text(
-              status == "success"
-                  ? "Registrasi Akun Sukses"
-                  : "Registrasi Akun Gagal",
-              style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+            Container(
+              width: double.infinity,
+              child: Text(
+                status == "success"
+                    ? "Registrasi Akun Sukses"
+                    : "Registrasi Akun Gagal",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center
+              ),
             ),
-            Text(
-              "Klik tombol di bawah ini untuk kembali ke halaman login",
-              style: TextStyle(fontSize: 16),
+            Container(
+              width: double.infinity,
+              child: Text(
+                "Klik tombol di bawah ini untuk kembali ke halaman login",
+                style: TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
             ),
             SizedBox(height: 16.0),
             ElevatedButton(

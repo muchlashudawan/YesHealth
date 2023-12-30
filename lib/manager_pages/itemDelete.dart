@@ -54,7 +54,6 @@ class _DeleteItemPageState extends State<DeleteItemPage> {
   }
 
   bool _isAnyCheckboxChecked() {
-  // Check if at least one checkbox is checked
   return items?.any((item) => item.isSelected) ?? false;
 }
 
@@ -70,11 +69,7 @@ class _DeleteItemPageState extends State<DeleteItemPage> {
             onPressed: () {
               _showDeleteConfirmation(context);
             },
-          ),
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: _refreshItems,
-          ),
+          )
         ],
       ),
       body: Padding(
