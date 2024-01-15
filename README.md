@@ -82,8 +82,7 @@ flutter run
 ## Authors
 
 - [Muchlas](https://www.github.com/Muchlas04) (Programmer/mahastudent)
-- [resmaynt](https://github.com/resmaynt) (Programmer/mahastudent)
-- [DevanAditiya](https://www.github.com/adwerygaming) (Programmer/student) 
+- [resmaynt](https://github.com/resmaynt) (Programmer/mahastudent) 
 
 ## License
 
