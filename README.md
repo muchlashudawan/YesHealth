@@ -81,8 +81,8 @@ flutter run
 
 ## Authors
 
-- [Muchlas](https://www.github.com/Muchlas04) (Programmer/mahastudent)
-- [resmaynt](https://github.com/resmaynt) (Programmer/mahastudent) 
+- [Muchlas](https://www.github.com/Muchlas04) (Programmer)
+- [resmaynt](https://github.com/resmaynt) (Programmer) 
 
 ## License
 
